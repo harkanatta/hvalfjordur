@@ -1,0 +1,89 @@
+Sub CategorizeDataWithReiturAndDeleteEmptyRows()
+    Dim ws As Worksheet
+    Dim sheetIndex As Integer
+    Dim currentRow As Integer
+    Dim lastRow As Integer
+    Dim category As String
+    Dim firstOccurrenceRow As Integer
+    Dim found As Boolean
+
+    ' Define the keywords to look for
+    Dim keywords As Variant
+    keywords = Array("Mosar", "Blað- og runnfléttur", "Hrúðurfléttur")
+
+    ' Loop through each sheet from R1 to R100
+    For sheetIndex = 1 To 100
+        Set ws = Nothing
+        On Error Resume Next ' Skip if sheet does not exist
+        Set ws = ThisWorkbook.Sheets("R" & sheetIndex)
+        On Error GoTo 0 ' Resume normal error handling
+        If Not ws Is Nothing Then
+            lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+            ' Find the first occurrence of any keyword in Column A
+            firstOccurrenceRow = 0
+            found = False
+            For currentRow = 2 To lastRow
+                For Each keyword In keywords
+                    If ws.Cells(currentRow, 1).Value = keyword Then
+                        firstOccurrenceRow = currentRow
+                        found = True
+                        Exit For
+                    End If
+                Next keyword
+                If found Then Exit For
+            Next currentRow
+
+            ' Delete rows from 2 to firstOccurrenceRow
+            If firstOccurrenceRow > 2 Then
+                ws.Rows("2:" & firstOccurrenceRow - 1).Delete
+            End If
+
+              ' Find the row with "Heildarþekja" in Column A and delete all rows below it
+            heildarRow = 0
+            For currentRow = 2 To lastRow
+                If ws.Cells(currentRow, 1).Value = "Heildarþekja" Then
+                    heildarRow = currentRow
+                    Exit For
+                End If
+            Next currentRow
+            If heildarRow > 0 Then
+                ws.Rows(heildarRow & ":" & ws.Rows.Count).Delete
+            End If
+
+            ' Update lastRow after deletion
+            lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+            ' Insert a new column for Type and Reitur
+            If ws.Cells(1, 2).Value <> "Type" Then
+                ws.Columns("B:B").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+                ws.Cells(1, 2).Value = "Type"
+                ws.Columns("C:C").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+                ws.Cells(1, 3).Value = "Reitur"
+            End If
+
+            ' Add "species" to cell A1
+            ws.Cells(1, 1).Value = "species"
+
+            ' Iterate over each cell in Column A after row 1 and categorize
+            For currentRow = 2 To lastRow
+                ws.Cells(currentRow, 3).Value = ws.Name ' Use sheet name for Reitur column
+                If ws.Cells(currentRow, 1).Font.Bold = True Then
+                    category = ws.Cells(currentRow, 1).Value
+                Else
+                    ws.Cells(currentRow, 2).Value = category
+                End If
+            Next currentRow
+
+            ' Delete rows where either column A or B is empty
+            lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+            For currentRow = lastRow To 2 Step -1
+                If ws.Cells(currentRow, 1).Value = "" Or ws.Cells(currentRow, 2).Value = "" Then
+                    ws.Rows(currentRow).Delete
+                End If
+            Next currentRow
+
+        End If
+    Next sheetIndex
+End Sub
+

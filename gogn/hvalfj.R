@@ -7,7 +7,7 @@ library(dplyr)
 library(purrr)
 
 # slóðin
-excel_path <- "C:/Users/valty/Documents/vinna/nnv/hvalfj/gogn/loka.xlsx" # Replace with your file path
+excel_path <- "gogn/loka.xlsx" # Replace with your file path
 
 # Allir reitir
 sheet_names <- excel_sheets(excel_path)
@@ -74,9 +74,9 @@ hreinsad[, 4:ncol(hreinsad)] <- lapply(4:ncol(hreinsad), function(x) as.numeric(
 
 
 # Fjarlægð
-KM <- read_excel("C:/Users/valty/Downloads/R1_2023.xlsx", sheet = "Results")
+KM <- read_excel("gogn/R1_2023.xlsx", sheet = "Results")
   
-FogS <- read.csv("C:/Users/valty/Documents/vinna/nnv/hvalfj/gogn/Reitir_myndir_lykill.csv", encoding = "latin1")
+FogS <- read.csv("gogn/Reitir_myndir_lykill.csv", encoding = "latin1")
 FogS$Fluor <- ifelse(is.na(FogS$Fluor)==TRUE,0,1)
 FogS$Brennisteinn <- ifelse(is.na(FogS$Brennisteinn)==TRUE,0,1)
 
@@ -84,7 +84,7 @@ FogS$Brennisteinn <- ifelse(is.na(FogS$Brennisteinn)==TRUE,0,1)
 # myndir
 
 data <- hreinsad
-data <- data %>%
+data <- data |>
   mutate(CoverageChange = `2023` - `2020`)
 
 
@@ -132,12 +132,12 @@ print(combined_results)
 library(ggplot2)
 library(tidyverse)
 
-joined_data <- data %>%
-  left_join(KM, by = "Reitur") %>%
+joined_data <- data |>
+  left_join(KM, by = "Reitur") |>
   select(species, Type, Reitur, km, everything())
 
-jd <- joined_data %>%
-  left_join(FogS, by = "Reitur") %>%
+jd <- joined_data |>
+  left_join(FogS, by = "Reitur") |>
   select(species, Type, Reitur, km, Fluor, Brennisteinn, everything())
 
 
@@ -164,7 +164,7 @@ data_long$Year <- as.numeric(gsub("`", "", data_long$Year))  # Clean year names
 
 library(dplyr)
 
-data_long <- data_long %>%
+data_long <- data_long |>
   mutate(
     species = as.character(species),
     Type = as.factor(Type),
@@ -179,10 +179,10 @@ data_long <- data_long %>%
     Coverage = as.numeric(Coverage)
   )
 
-
-df <- data_long %>% 
+library(plyr)
+df <- data_long |> 
   filter(Type %in% c("Mosar", "Blað- og runnfléttur", "Hrúðurfléttur")) |>
-  ddply(.(Year, Type, Stadur, KM, Fluor, Brennisteinn),summarise, N=mean(CoverageChange, na.rm = T )) %>% 
+  ddply(.(Year, Type, Stadur, KM, Fluor, Brennisteinn),summarise, N=mean(CoverageChange, na.rm = T )) |> 
   arrange(N)
 
 ggplot(df, aes(x = KM, y = N, fill = Stadur)) +
@@ -204,12 +204,12 @@ df <- joined_data |>
 df$Year <- as.numeric(gsub("`", "", df$Year))  # Clean year names
   
 
-df <- data_long %>% 
+df <- data_long |> 
   filter(Type %in% c("Mosar", "Blað- og runnfléttur", "Hrúðurfléttur")) |>
   mutate(Year = factor(Year),
          Reitur = factor(Reitur),
-         Type = factor(Type)) %>% 
-  ddply(.(Year, Type),summarise, N=mean(Coverage, na.rm = T )) %>% 
+         Type = factor(Type)) |> 
+  ddply(.(Year, Type),summarise, N=mean(Coverage, na.rm = T )) |> 
   arrange(N)
 
 ggplot(df, aes(x = Year, y = N, fill = Type)) +

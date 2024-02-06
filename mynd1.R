@@ -16,7 +16,8 @@ library(plyr)
     select(-c(`1976`, `1997`, `2006`, `2011`, `1999`,`2014`, `2017`))
   write.csv(df,"gogn/coverkm.csv", row.names = F, fileEncoding = "UTF-8")
   
-  read.csv("gogn/coverkm.csv", check.names = F)  |> 
+  jd <- read.csv("gogn/coverkm.csv", check.names = F) 
+  jd |> 
   ddply(.(km, Reitur, Fluor, Brennisteinn), summarize, CoverageChange=mean(CoverageChange, na.rm=T))  %>%
   ggplot(aes(x = km, y = CoverageChange)) +
   geom_point() +  # Change to geom_line() if a line plot is preferred
@@ -130,7 +131,7 @@ my_plot <- ggplot(stats_by_reitur, aes(x = factor(Reitur, levels = unique(Reitur
   geom_point(position = dodge, size = 3) +
   geom_errorbar(aes(ymin = Mean - Error, ymax = Mean + Error), width = 0.2, position = dodge) +
   scale_color_manual(values = c("2020" = "blue", "2023" = "red"), name = "Year") +
-  theme_ipsum() +
+  theme_minimal() +
   labs(
     title = "Breytileiki þekju innan reita Reitur",
     x = "Reitur",

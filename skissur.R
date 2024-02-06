@@ -340,19 +340,23 @@ dflong <- hreinsad %>%
 
 dflong_Engin_NA <- dflong[!is.na(dflong$Coverage),]
 
-# Heildarfjöldi tegunda á ári. Passa að hafa ekki plyr pakkann í gangi.
+
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+pkg <- "package:plyr"
+detach(pkg, character.only = TRUE)
+
 species_counts <- dflong_Engin_NA %>%
   group_by(Reitur, Year) %>%
   summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
 
-# Calculate the mean number of species for every Reitur across Years
+# Meðalfjöldi tegunda í reit á ári
 mean_species_per_year <- species_counts %>%
   group_by(Year) %>%
   summarise(Mean = mean(SpeciesCount)) |> 
   mutate(Type = "Tegundafjöldi")
 
 #ddply(dflong_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-
+library(plyr)
 df <- dflong_Engin_NA |> 
   ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |> 
   ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE)) 
@@ -430,5 +434,32 @@ p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean)) +
        y = "Meðalþekja", x = "") +
   theme_minimal()
 
- ggsave("mynd4.png", plot = my_plot, width = 11.7, height = 8.3, dpi = 300, units = "in")
+ ggsave("mynd4.png", plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
 
+ 
+ 
+ 
+ 
+ 
+ # Assuming you have the 'ggplot2' package installed
+ # If not, you can install it by uncommenting the following line:
+ # install.packages("ggplot2")
+ 
+ library(ggplot2)
+ 
+ # Your data frame will be similar to this structure
+ rass <- data.frame(
+   Year = c(1976, 1997, 2006, 2011, 2014, 2017, 2020, 2023),
+   Coverage = c(3.791796, 3.632789, 3.524017, 3.560057, 4.273623, 4.891759, 4.068379, 4.814438)
+ )
+ 
+ # Plotting
+ ggplot(rass, aes(x = Year, y = Coverage)) +
+   geom_line() + # Add a line
+   geom_point() + # Add points at each year
+   theme_minimal() + # Use a minimal theme
+   labs(title = "Trend of Lichen Coverage Over Time",
+        x = "Year",
+        y = "Average Coverage") +
+   scale_x_continuous(breaks = data$Year) # Ensure all years are included on the x-axis
+ 

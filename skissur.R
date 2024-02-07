@@ -463,3 +463,79 @@ p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean)) +
         y = "Average Coverage") +
    scale_x_continuous(breaks = data$Year) # Ensure all years are included on the x-axis
  
+
+ 
+ 
+ 
+ 
+ #########
+ #Mynd scatter
+ ##########
+ 
+ 
+ library(tidyverse)
+ 
+ data <- read.csv("gogn/hreinsad.csv", check.names = F) 
+ 
+ joined_data <- data %>%
+   left_join(KM, by = "Reitur") %>%
+   select(species, Type, Reitur, km, everything())
+ 
+ jd <- joined_data %>%
+   left_join(FogS, by = "Reitur") %>%
+   select(species, Type, Reitur, km, Fluor, Brennisteinn, everything())
+ 
+
+
+ 
+   jd_long <-jd %>%
+     #left_join(KM, by = c("Reitur", "Type", "species","2020","2023")) |> 
+     select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |> 
+     filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+                           "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+              Type %in% "Blað- og runnfléttur") |>
+     filter(!species %in% "Ber klöpp") |> 
+     #filter(!is.na(`2017`)) |> 
+     #filter(!is.na(`2020`)) |> 
+     mutate(#`2017` = case_when(
+       # is.na(`2017`) ~ 0,
+       # TRUE ~ `2017`),
+       # `2020` = case_when(
+       # is.na(`2020`) ~ 0,
+       # TRUE ~ `2020`),
+       PointType = case_when(
+       Fluor==1 ~ "Fluor",
+       Brennisteinn==1 ~ "Brennisteinn",
+       TRUE ~ "Other")) |> 
+     group_by(km,Stadur,Reitur,PointType) |>
+     summarise(M17=sum(`2017`),M20=sum(`2020` ),CoverageChange=M20-M17, .groups = 'drop')#|> 
+     # group_by(km,Stadur,Reitur,PointType,CoverageChange) |>
+     # summarise(CoverageChange=mean(CoverageChange, na.rm = T), .groups = 'drop') #|> 
+     # group_by(km,Fluor,Brennisteinn,Stadur,PointType) |> 
+     # summarise(CoverageChange=mean(CoverageChange, na.rm = T), .groups = 'drop')
+      
+
+ 
+ # Assuming jd_long has already been mutated to include the PointType column as previously described
+ 
+ # Plot with conditional aesthetics and a single line for "Other"
+ ggplot(jd_long, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point() + # Plot all points with conditional shapes and colors
+   geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+   scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+   scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+   theme_minimal() +
+   labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+        x = "Distance from Source (km)",
+        y = "Coverage Change",
+        shape = "Point Type",
+        color = "Point Type") +
+   guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black"))) # Adjust legend to reflect the aesthetics accurately
+ 
+ # Note: The aes(group = 1) in geom_smooth ensures that the line is considered as a single group, important for datasets with multiple groups.
+ 
+ 
+ 
+ 
+ 
+ 

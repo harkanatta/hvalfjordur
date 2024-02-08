@@ -4,7 +4,7 @@ KM <- read.csv("gogn/coverkm.csv", check.names = F)
 data <- read.csv("gogn/hreinsad.csv", check.names = F) 
 
 joined_data <- data %>%
-  left_join(KM, by = c("Reitur", "Type", "species","2020","2023")) %>%
+  left_join(KM, by = c("Reitur", "Type", "species","2020","2023")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`.
   select(species, Type, Reitur, km, everything()) |>
   select(-c(`1999`)) |> 
   filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |> 

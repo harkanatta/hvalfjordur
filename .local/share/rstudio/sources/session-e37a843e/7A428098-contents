@@ -1,0 +1,4 @@
+
+rass <- read.table(text = readClipboard(), header = TRUE, check.names = FALSE)
+if (!requireNamespace("clipr", quietly = TRUE)) install.packages("clipr")
+rass <- read.table(text = clipr::read_clip(), header = TRUE, check.names = FALSE)

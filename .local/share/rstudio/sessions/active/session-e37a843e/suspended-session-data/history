@@ -1,0 +1,512 @@
+rowwise() %>%
+filter(sum(c_across(all_of(year_columns))) > 0)
+# Load the plyr package
+library(plyr)
+# Assuming 'jd' is your dataframe and 'year_columns' contains the names of the year columns
+year_columns <- c("1976", "1997", "2006", "2011", "2014", "2017", "2020", "2023", "1999")
+# Use ddply to apply a function across subsets of the dataframe grouped by 'Reitur'
+missing_surveys <- ddply(jd, .(Reitur), function(df) {
+# For each group, calculate the number of NA values in each year column
+missing_counts <- sapply(df[year_columns], function(column) sum(is.na(column)))
+# Create a dataframe to return that includes the Reitur and missing counts for each year
+data.frame(Reitur = df$Reitur[1], missing_counts)
+})
+# Since ddply will repeat the Reitur for each row, we may want to aggregate or filter this further
+# For simplicity, this example just calculates missing counts. You might need to adjust this example
+# to fit exactly what you need, e.g., filtering to keep only Reiturs with missing values.
+# View the first few rows of the result
+head(missing_surveys)
+# Assuming 'jd' is your dataframe
+# Assuming 'year_columns' contains the names of the year columns
+year_columns <- c("1976", "1997", "2006", "2011", "2014", "2017", "2020", "2023", "1999")
+# Use ddply to check for missing values in year columns for each Reitur
+missing_surveys <- ddply(jd, .(Reitur), function(df) {
+# Initialize an empty data frame to store results
+results <- data.frame(Year = character(), Skipped = logical(), stringsAsFactors = FALSE)
+# Loop through each year column to check for missing values
+for (year in year_columns) {
+# Check if the year column has any missing value
+skipped <- any(is.na(df[[year]]))
+# Append to the results data frame
+results <- rbind(results, data.frame(Year = year, Skipped = skipped))
+}
+# Return results with Reitur added
+cbind(Reitur = df$Reitur[1], results)
+}, .progress = 'text')
+# Filter to keep only the rows where Skipped is TRUE
+missing_surveys <- missing_surveys[missing_surveys$Skipped == TRUE, ]
+# View the first few rows of the modified result
+head(missing_surveys)
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+if ("package:plyr" %in% search()) {
+# Detach 'plyr' if it is loaded
+detach("package:plyr", unload = TRUE, character.only = TRUE)
+}
+# Load necessary package
+library(dplyr)
+# Your data.frame is named 'jd'
+# Assuming 'NA' represents missing or non-numerical values in year columns
+# Filtering for Reitur values with no numerical values in any of the year columns
+reitur_with_no_numerical_values <- jd %>%
+# Select relevant columns
+select(Reitur, `1976`, `1997`, `2006`, `2011`) %>%
+# Group by Reitur
+group_by(Reitur) %>%
+# Check if all values in the year columns are NA for each Reitur
+filter(all(is.na(`1976`), is.na(`1997`), is.na(`2006`), is.na(`2011`))) %>%
+# Get unique Reitur values
+distinct(Reitur)
+# Display the Reitur values with no numerical values in any of the year columns
+print(reitur_with_no_numerical_values)
+year_columns
+str(jd)
+jd$Reitur[jd$Reitur & jd$`2023`]
+jd$Reitur[jd$Reitur==1 & jd$`2023`]
+jd$Reitur[jd$Reitur==1 & jd$`1999`]
+jd[jd$Reitur=="R1" & jd$`1999`]
+jd[jd$Reitur=="R1" & jd$`1999`,]
+jd[jd$Reitur=="R1" & jd$`1997`,]
+jd[jd$Reitur=="R1" & jd$`2014`,]
+jd[jd$Reitur=="R1" & jd$`1997`,]
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+if ("package:plyr" %in% search()) {
+# Detach 'plyr' if it is loaded
+detach("package:plyr", unload = TRUE, character.only = TRUE)
+}
+# Assuming 'jd' is your dataframe
+# Loading necessary library
+library(dplyr)
+# Define year columns to check
+year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+# Create a function to check for rows without numerical values for each year within each Reitur
+check_numerical_values <- function(data, year_cols) {
+results <- data %>%
+select(Reitur, all_of(year_cols)) %>%
+pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+group_by(Reitur, Year) %>%
+summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+filter(!HasValue)
+return(results)
+}
+# Apply the function to the jd dataframe
+results <- check_numerical_values(jd, year_cols)
+# Print results
+print(results)
+# Assuming 'jd' is your dataframe
+# Loading necessary library
+library(dplyr)
+# Define year columns to check
+year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+# Create a function to check for rows without numerical values for each year within each Reitur
+check_numerical_values <- function(data, year_cols) {
+results <- data %>%
+select(Reitur, all_of(year_cols)) %>%
+pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+group_by(Reitur, Year) %>%
+summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+filter(!HasValue)
+return(results)
+}
+# Apply the function to the jd dataframe
+results <- check_numerical_values(jd, year_cols)
+# Print results
+print(results, n=200)
+# Assuming 'jd' is your dataframe
+# Loading necessary library
+library(dplyr)
+# Define year columns to check
+year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+# Create a function to check for rows without numerical values for each year within each Reitur
+check_numerical_values <- function(data, year_cols) {
+results <- data %>%
+select(Reitur, all_of(year_cols)) %>%
+pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+group_by(Reitur, Year) %>%
+summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+filter(!HasValue)
+return(results)
+}
+# Apply the function to the jd dataframe
+results <- check_numerical_values(jd, year_cols)
+# Print results
+print(results, n=250)
+table(results)
+# First, create an identifier in both jd and results to match rows
+jd$identifier <- paste(jd$Reitur, jd$Year, sep = "_")
+table(jd$identifier )
+str(table(results))
+str(jd)
+as.data.frame(as.table(results))
+as.data.frame(table(results))
+DT::datatable(as.data.frame(table(results)))
+as.data.frame(table(results))[,c(1,2,4)]
+as.data.frame(table(results))[,c(1,2,4)]
+results_df <-as.data.frame(table(results))[,c(1,2,4)]
+colnames(results_df)
+colnames(results_df) <-  c("Reitur" "Year"   "Exclude")
+colnames(results_df) <-  c("Reitur","Year","Exclude")
+colnames(results_df) <-  c("Reitur","Year","Exclude")
+jd$Year <- apply(jd[, c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')], 1, function(x) names(x))
+?apply
+results_df
+results_df[order(results_df$Reitur)]
+results_df[order(results_df$Reitur),]
+results_df[order(results_df$Reitur) & results_df$Exclude==0,]
+rass
+rass <- results_df[order(results_df$Reitur) & results_df$Exclude==0,]
+rass
+include <- rass[,1:2]
+include
+jd[,include$Year[unique(include$Year)[1]]]
+include$Year[unique(include$Year)[1]]
+str(include$Year[unique(include$Year)[1]])
+unlist(include$Year[unique(include$Year)[1]])
+c(include$Year[unique(include$Year)[1]])
+(include$Year[unique(include$Year)[1]])[1]
+(include$Year[unique(include$Year)[1]])
+(include$Year[unique(include$Year)[1]])[[1]]
+class(include$Year[unique(include$Year)[1]])
+list(include$Year[unique(include$Year)[1]])
+droplevels(include$Year[unique(include$Year)[1]])
+class(droplevels(include$Year[unique(include$Year)[1]]))
+as.numeric(droplevels(include$Year[unique(include$Year)[1]]))
+levels(droplevels(include$Year[unique(include$Year)[1]]))
+class(levels(droplevels(include$Year[unique(include$Year)[1]])))
+as.numeric(levels(droplevels(include$Year[unique(include$Year)[1]])))
+jd[,as.numeric(levels(droplevels(include$Year[unique(include$Year)[1]])))]
+as.numeric(levels(droplevels(include$Year[unique(include$Year)[1]])))
+jd_long <- jd %>%
+pivot_longer(cols = starts_with("19") | starts_with("20"),
+names_to = "Year",
+values_to = "Value",
+names_prefix = "") %>%
+mutate(Year = as.numeric(Year))
+include
+jd$identifier <- paste(jd$Reitur, jd$Year, sep = "_")
+jd_long$identifier <- paste(jd_long$Reitur, jd_long$Year, sep = "_")
+include$identifier <- paste(include$Reitur, include$Year, sep = "_")
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier))
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier)
+library(dplyr)
+# Define year columns to check
+year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+# Create a function to check for rows without numerical values for each year within each Reitur
+check_numerical_values <- function(data, year_cols) {
+results <- data %>%
+select(Reitur, all_of(year_cols)) %>%
+pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+group_by(Reitur, Year) %>%
+summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+filter(!HasValue)
+return(results)
+}
+# Apply the function to the jd dataframe
+results <- check_numerical_values(jd, year_cols)
+# Print results
+print(results)
+results_df <-as.data.frame(table(results))[,c(1,2,4)]
+colnames(results_df) <-  c("Reitur","Year","Exclude")
+rass <- results_df[order(results_df$Reitur) & results_df$Exclude==0,]
+include <- rass[,1:2]
+include$identifier <- paste(include$Reitur, include$Year, sep = "_")
+jd_long <- jd %>%
+pivot_longer(cols = starts_with("19") | starts_with("20"),
+names_to = "Year",
+values_to = "Value",
+names_prefix = "") %>%
+mutate(Year = as.numeric(Year))
+jd_long$identifier <- paste(jd_long$Reitur, jd_long$Year, sep = "_")
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier)
+jd_wide_filtered <- jd_filtered %>%
+pivot_wider(names_from = Year, values_from = Value)
+jd_fyrir_plot <-jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp") |>
+#filter(!is.na(`2017`)) |>
+#filter(!is.na(`2020`)) |>
+mutate(#`2017` = case_when(
+# is.na(`2017`) ~ 0,
+# TRUE ~ `2017`),
+# `2020` = case_when(
+# is.na(`2020`) ~ 0,
+# TRUE ~ `2020`),
+PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other")) |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`),M20=sum(`2020` ),CoverageChange=M20-M17, .groups = 'drop')
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black"))) # Adjust legend to reflect the aesthetics accurately
+jd_fyrir_plot <-jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp") |>
+#filter(!is.na(`2017`)) |>
+#filter(!is.na(`2020`)) |>
+mutate(#`2017` = case_when(
+# is.na(`2017`) ~ 0,
+# TRUE ~ `2017`),
+# `2020` = case_when(
+# is.na(`2020`) ~ 0,
+# TRUE ~ `2020`),
+PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other")) |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`),M20=sum(`2020` ),CoverageChange=M20-M17, .groups = 'drop')
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black"))) # Adjust legend to reflect the aesthetics accurately
+table(jd_wide_filtered$Fluor)
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point()
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black")))
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal()
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_long, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other"))
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_fyrir_plot, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black")))
+jd_fyrir_plot
+jd_wide_filtered
+jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur")
+jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp")
+jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp") |>
+mutate(PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other"))
+jd_fyrir_plot <-jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp") |>
+mutate(PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other")) |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M20-M17, .groups = 'drop')
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_fyrir_plot, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black")))
+jd_fyrir_plot
+jd_fyrir_plot[jd_fyrir_plot$Reitur=="R65",]
+jd_filtered
+jd_filtered[jd_filtered$Reitur=="R65",]
+print(jd_filtered[jd_filtered$Reitur=="R65",], n=100)
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp")
+jd_wide_filtered <- jd_filtered %>%
+pivot_wider(names_from = Year, values_from = Value)
+jd_fyrir_plot <-jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+mutate(PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other")) |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M20-M17, .groups = 'drop')
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_fyrir_plot, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black")))
+# Define year columns to check
+year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+# Create a function to check for rows without numerical values for each year within each Reitur
+check_numerical_values <- function(data, year_cols) {
+results <- data %>%
+select(Reitur, all_of(year_cols)) %>%
+pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+group_by(Reitur, Year) %>%
+summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+filter(!HasValue)
+return(results)
+}
+# Apply the function to the jd dataframe
+results <- check_numerical_values(jd, year_cols)
+# Print results
+print(results)
+results_df <-as.data.frame(table(results))[,c(1,2,4)]
+colnames(results_df) <-  c("Reitur","Year","Exclude")
+rass <- results_df[order(results_df$Reitur) & results_df$Exclude==0,]
+include <- rass[,1:2]
+include$identifier <- paste(include$Reitur, include$Year, sep = "_")
+jd_long <- jd %>%
+pivot_longer(cols = starts_with("19") | starts_with("20"),
+names_to = "Year",
+values_to = "Value",
+names_prefix = "") %>%
+mutate(Year = as.numeric(Year))
+jd_long$identifier <- paste(jd_long$Reitur, jd_long$Year, sep = "_")
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |>
+filter(!species %in% "Ber klöpp")
+jd_filtered
+print(jd_filtered[jd_filtered$Reitur=="R65",], n=100)
+print(jd_filtered[jd_filtered$Reitur=="R1",], n=100)
+unique(jd_filtered$Year)
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp") |>
+filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2023', '1999',)) |>
+mutate(PointType = case_when(
+Fluor==1 ~ "Fluor",
+Brennisteinn==1 ~ "Brennisteinn",
+TRUE ~ "Other"))
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp") |>
+filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2023', '1999',)) |>
+mutate(PointType = case_when(
+!is.na(Fluor) ~ "Fluor",
+!is.na(Brennisteinn) ~ "Brennisteinn",
+TRUE ~ "Other"))
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp")
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp") |>
+filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2023', '1999')) |>
+mutate(PointType = case_when(
+!is.na(Fluor) ~ "Fluor",
+!is.na(Brennisteinn) ~ "Brennisteinn",
+TRUE ~ "Other"))
+jd_filtered
+jd_fyrir_plot <-jd_wide_filtered %>%
+select(-c(`1999`,`1976`, `1997`, `2006`, `2011`, `2014`, `2023`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28",
+"R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M20-M17, .groups = 'drop')
+jd_fyrir_plot <-jd_wide_filtered |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M20-M17, .groups = 'drop')
+jd_wide_filtered
+jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp") |>
+filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2023', '1999')) |>
+mutate(PointType = case_when(
+!is.na(Fluor) ~ "Fluor",
+!is.na(Brennisteinn) ~ "Brennisteinn",
+TRUE ~ "Other"))
+jd_filtered
+rm(jd_wide_filtered)
+jd_wide_filtered <- jd_filtered %>%
+pivot_wider(names_from = Year, values_from = Value)
+jd_fyrir_plot <-jd_wide_filtered |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M17=sum(`2017`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M20-M17, .groups = 'drop')
+ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+geom_point() + # Plot all points with conditional shapes and colors
+geom_smooth(data = subset(jd_fyrir_plot, PointType == "Other"), method = "lm", se = T, aes(group = 1, color = "Other")) + # Only draw line for "Other"
+scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) + # 17 is triangle, 15 is square
+scale_color_manual(values = c("Fluor" = "green", "Brennisteinn" = "red", "Other" = "black")) +
+theme_minimal() +
+labs(title = "Coverage Change vs. Distance for Point Type 'Other'",
+x = "Distance from Source (km)",
+y = "Coverage Change",
+shape = "Point Type",
+color = "Point Type") +
+guides(color = guide_legend(override.aes = list(shape = 1)), shape = guide_legend(override.aes = list(color = "black")))
+?pivot_wider()
+jd_wide_filtered[jd_wide_filtered$Reitur=="R65",]

@@ -536,6 +536,12 @@ p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean)) +
  
  
  
+
+ filtered_data <- rass %>%
+   group_by(Reitur) %>%
+   filter(all(c(2017, 2020) %in% unique(Year))) %>%
+   ungroup()
  
- 
+ # View the filtered data
+ print(filtered_data)
  

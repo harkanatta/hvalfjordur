@@ -1,9 +1,9 @@
 {
     "id": "562E7F77",
-    "path": "~/rassgat.R",
+    "path": "~/mengun2017_2020.R",
     "project_path": null,
     "type": "r_source",
-    "hash": "2552217430",
+    "hash": "4041767416",
     "contents": "",
     "dirty": false,
     "created": 1707317259270.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "47,28",
-        "scrollLine": "37"
+        "cursorPosition": "7,2",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1707321394,
+    "lastKnownWriteTime": 1707406625,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1707321394690,
+    "last_content_update": 1707406625943,
     "read_only": false,
     "read_only_alternatives": []
 }

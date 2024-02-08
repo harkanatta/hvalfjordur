@@ -1,12 +1,8 @@
 {
     "environmentPanelSettings": {
-        "scroll_position": 0,
+        "scroll_position": 113,
         "expanded_objects": [
-            "joined_data",
-            "joined_data",
-            "KM",
-            "jd_long",
-            "jd_long"
+            "jd_wide_filtered"
         ],
         "sort_column": 0,
         "ascending_sort": true

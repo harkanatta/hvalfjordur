@@ -2,3 +2,6 @@ help/library/ggplot2/html/geom_smooth.html,R: Smoothed conditional means
 help/library/base/html/apply.html,R: Apply Functions Over Array Margins
 help/library/tidyr/html/pivot_wider.html,R: Pivot data from long to wide
 help/library/ggplot2/html/scale_manual.html,R: Create your own discrete scale
+help/library/ggplot2/html/scale_discrete.html,R: Position scales for discrete data
+help/library/dplyr/html/rename.html,R: Rename columns
+help/library/RColorBrewer/html/ColorBrewer.html,R: ColorBrewer palettes

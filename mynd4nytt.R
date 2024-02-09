@@ -43,8 +43,10 @@ species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
 # Meðalfjöldi tegunda í reit á ári
 mean_species_per_year <- species_counts %>%
   group_by(Year) %>%
-  summarise(Mean = mean(SpeciesCount)) |> 
-  mutate(Type = "Tegundafjöldi")
+  summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |> 
+  mutate(Type = "Tegundafjöldi")|> 
+  select(Type, Year, Mean, SE)
+
 
 #ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
 library(plyr)
@@ -54,10 +56,11 @@ df <- jd_long_Engin_NA |>
 
 #Leggja saman heildarþekju allra reita innan ára
 df_summary <- df |> 
-  ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE)) 
+  ddply(.(Year),summarize,BreytaStaf=sum(Mean, na.rm=TRUE),SE = sd(Mean, na.rm = TRUE) / sqrt(length(Mean))) |> 
+  dplyr::rename(Mean=BreytaStaf)
 sums_row <- df_summary %>%
   mutate(Type = "Heildarþekja") |> 
-  select(Type, Year, Mean)
+  select(Type, Year, Mean, SE)
 
 combined_df <- bind_rows(sums_row, mean_species_per_year)
 
@@ -69,18 +72,33 @@ library(scales)
 # Ensure Type is ordered as desired
 df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
 
+
 # Plot
-p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-  geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-  scale_fill_brewer(palette = "Set1") +
+p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year), fill = "white") +
+  geom_bar(stat = "identity", color = "black", linewidth = .6, position = position_dodge(width = 0.75)) +
+  geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE), width = .2, position = position_dodge(width = 0.75)) +
+  scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
   scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
                      # Example secondary axis (e.g., double the Mean for illustration)
                      sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
   labs(title = "", 
        y = "Meðalþekja", x = "") +
+  scale_x_discrete(
+    "",
+    labels = c(
+      "Mosar" = "Mosar",
+      "Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+      "Hrúðurfléttur" = "Hrúðurfléttur",
+      "Heildarþekja" = "Heildarþekja",
+      "Tegundafjöldi" = "Tegundafjöldi"
+    ))+
   theme_minimal()+
   theme(legend.title = element_blank(),
         plot.background = element_rect(fill = "white", color = NA)) +
-  annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
+  annotate("text", x = 3, y = Inf, label = "Allir reitir utan \n15 nýrra frá 2014", hjust = 1, vjust = 1, size = 8, angle = 0)
+
+p1 <- p1 + theme(axis.title = element_text(size = 16), # Increase axis titles
+                 axis.text = element_text(size = 16), # Increase axis text
+                 legend.text = element_text(size = 16)) # Increase legend text
 
 ggsave(filename = "mynd4.png", plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")

@@ -1,9 +1,7 @@
 {
     "environmentPanelSettings": {
-        "scroll_position": 113,
-        "expanded_objects": [
-            "jd_wide_filtered"
-        ],
+        "scroll_position": 0,
+        "expanded_objects": [],
         "sort_column": 0,
         "ascending_sort": true
     }

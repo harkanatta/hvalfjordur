@@ -3,7 +3,7 @@
     "path": "~/mengun2020_2023.R",
     "project_path": null,
     "type": "r_source",
-    "hash": "0",
+    "hash": "3378326675",
     "contents": "",
     "dirty": false,
     "created": 1707388895149.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "79,72",
-        "scrollLine": "64"
+        "cursorPosition": "8,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1707390183,
+    "lastKnownWriteTime": 1707491798,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1707390183983,
+    "last_content_update": 1707491798204,
     "read_only": false,
     "read_only_alternatives": []
 }

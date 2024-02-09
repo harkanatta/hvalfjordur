@@ -1,3 +1,11 @@
+data <- read.csv("gogn/hreinsad.csv", check.names = F)
+KM <- read.csv("gogn/coverkm.csv", check.names = F)
+KM <-  KM[, -c(7:9)]
+joined_data <- data %>%
+  left_join(KM, by = c("Reitur", "Type", "species"))  %>% # Getur komið upp villa, stroka þá út  , "Type", "species"
+  select(species, Type, Reitur, km, everything())
+
+
 
 library(dplyr)
 
@@ -18,11 +26,6 @@ check_numerical_values <- function(data, year_cols) {
 
 # Apply the function to the jd dataframe
 results <- check_numerical_values(jd, year_cols)
-
-# Print results
-print(results)
-
-
 
 results_df <-as.data.frame(table(results))[,c(1,2,4)]
 colnames(results_df) <-  c("Reitur","Year","Exclude") 
@@ -76,7 +79,7 @@ mynd1 <- ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType
   scale_shape_manual(values = c("Innan þynningarsvæðis flúors" = 17, "Innan þynningarsvæðis brennisteins" = 15, "Utan þynningarsvæðis iðnaðarsvæðisins" = 1)) +
   scale_color_manual(values = c("Innan þynningarsvæðis flúors" = colors_dark2[1], "Innan þynningarsvæðis brennisteins" = colors_dark2[2], "Utan þynningarsvæðis iðnaðarsvæðisins" = colors_dark2[3])) +
   theme_minimal()  +
-  theme(legend.position = c(0.8, 0.15)) +
+  theme(legend.position = c(0.75, 0.15)) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=.5)) + # Add frame around the plot area
   labs(title = "Blað- og runnfléttur",
        x = "Fjarlægð frá Grundartanga (km)",
@@ -85,6 +88,11 @@ mynd1 <- ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType
        color = "Reitir") + # Change legend title for colors
   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))), # Ensure legend matches plot symbols
          shape = guide_legend(override.aes = list(color = colors_dark2))) # Match colors in legend
+
+mynd1 <- mynd1 + theme(plot.title = element_text(size = 22), 
+                       axis.title = element_text(size = 16),
+                       axis.text = element_text(size = 16),
+                       legend.text = element_text(size = 16)) # Increase legend text
 
 ggsave(filename = "mynd1.png", plot = mynd1, width = 11.7, height = 8.3, dpi = 300, units = "in", bg = 'white')
 
@@ -151,7 +159,7 @@ mynd2 <- ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType
   scale_shape_manual(values = c("Innan þynningarsvæðis flúors" = 17, "Innan þynningarsvæðis brennisteins" = 15, "Utan þynningarsvæðis iðnaðarsvæðisins" = 1)) +
   scale_color_manual(values = c("Innan þynningarsvæðis flúors" = colors_dark2[1], "Innan þynningarsvæðis brennisteins" = colors_dark2[2], "Utan þynningarsvæðis iðnaðarsvæðisins" = colors_dark2[3])) +
   theme_minimal()  +
-  theme(legend.position = c(0.8, 0.15)) +
+  theme(legend.position = c(0.75, 0.15)) +
   theme(panel.border = element_rect(colour = "black", fill=NA, size=.5)) + # Add frame around the plot area
   labs(title = "Mosar",
        x = "Fjarlægð frá Grundartanga (km)",
@@ -160,6 +168,11 @@ mynd2 <- ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType
        color = "Reitir") + # Change legend title for colors
   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))), # Ensure legend matches plot symbols
          shape = guide_legend(override.aes = list(color = colors_dark2))) # Match colors in legend
+
+mynd2 <- mynd2 + theme(plot.title = element_text(size = 22), 
+                       axis.title = element_text(size = 16),
+                       axis.text = element_text(size = 16),
+                       legend.text = element_text(size = 16)) # Increase legend text
 
 ggsave(filename = "mynd2.png", plot = mynd2, width = 11.7, height = 8.3, dpi = 300, units = "in", bg = 'white')
 

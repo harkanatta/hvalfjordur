@@ -1,0 +1,5 @@
+jd_long_Engin_NA |> 
+  group_by(Type,Year,Reitur) %>% 
+  summarise( Summa = sum(Coverage, na.rm = TRUE),SE = sd(Coverage, na.rm = TRUE) / sqrt(length(Coverage)), .groups = 'drop') |> 
+  group_by(Type,Year) %>% 
+  summarise(Mean=mean(Summa, na.rm=TRUE),SE = mean(SE, na.rm=TRUE), .groups = 'drop')

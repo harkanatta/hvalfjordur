@@ -10,7 +10,7 @@ data <- read.csv("gogn/hreinsad.csv", check.names = F)
 joined_data <- data %>%
   left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
   select(species, Type, Reitur, km, everything()) |>
-  select(-c(`1999`)) |> 
+  #select(-c(`1999`)) |> 
   filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |> 
   #mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |> 
   filter(!species %in% "Ber klöpp") 
@@ -26,7 +26,7 @@ for (i in unique(joined_data$Stadur)) {
     select(where(~ !all(is.na(.))))
   
   # Dynamically identify year columns that exist after filtering
-  year_columns <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023')
+  year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
   existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
   
   # Pivot longer only with existing year columns
@@ -76,11 +76,11 @@ p1 <-
     size = .6,
     position = position_dodge(width = 0.75)
   ) +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    width = .2,
-    position = position_dodge(width = 0.75)
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = Mean - SE, ymax = Mean + SE),
+  #   width = .2,
+  #   position = position_dodge(width = 0.75)
+  # ) +
   scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
   scale_y_continuous(
     labels = label_dollar(prefix = "", suffix = " \n%"),

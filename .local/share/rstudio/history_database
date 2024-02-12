@@ -756,3 +756,1859 @@
 1707497039464:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
 1707497039477:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
 1707497039518:}
+1707745328867:unique(joined_data$Stadur)
+1707745372129:library(tidyverse)
+1707745372227:library(glue)
+1707745372251:library(scales)
+1707745372287:colors_dark2 <- brewer.pal(8, "Accent")
+1707745372331:KM <- read.csv("gogn/coverkm.csv", check.names = F)
+1707745372527:KM <-  KM[,-c(7:9)]
+1707745372559:data <- read.csv("gogn/hreinsad.csv", check.names = F)
+1707745372689:joined_data <- data %>%
+1707745372730:left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
+1707745372760:select(species, Type, Reitur, km, everything()) |>
+1707745372787:#select(-c(`1999`)) |>
+1707745372814:filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+1707745372838:#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
+1707745372859:filter(!species %in% "Ber klöpp")
+1707745386332:for (i in unique(joined_data$Stadur)[15]) {
+1707745386386:filtered_data <- joined_data %>%
+1707745386412:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707745386437:select(where(~ !all(is.na(.))))
+1707745386468:# Dynamically identify year columns that exist after filtering
+1707745386483:year_columns <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023')
+1707745386501:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707745386563:# Pivot longer only with existing year columns
+1707745386586:jd_long <- filtered_data %>%
+1707745386609:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707745386652:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707745386693:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707745386717:# Fjöldi tegunda í reit á ári
+1707745386739:species_counts <- jd_long_Engin_NA %>%
+1707745386762:group_by(Reitur, Year) %>%
+1707745386786:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707745386809:# Meðalfjöldi tegunda í reit á ári
+1707745386830:group_by(Year) %>%
+1707745386847:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707745386866:mutate(Type = "Tegundafjöldi")|>
+1707745386885:select(Type, Year, Mean, SE)
+1707745386920:# Meðalþekja reita eftir Type
+1707745386940:df <- jd_long_Engin_NA |>
+1707745386962:group_by(Type,Year,Reitur) %>%
+1707745386981:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707745386999:group_by(Type,Year) %>%
+1707745387022:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707745387059:# heildarþekja (öll Type) allra reita innan ára
+1707745387078:df_summary <- jd_long_Engin_NA |>
+1707745387098:group_by(Year,Reitur) %>%
+1707745387116:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707745387142:group_by(Year) %>%
+1707745387169:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707745387188:mutate(Type = "Heildarþekja") |>
+1707745387209:select(Type, Year, Mean, SE)
+1707745387265:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707745387301:# Ensure Type is ordered as desired
+1707745387333:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707745387370:# Plot
+1707745387392:p1 <-
+1707745387412:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707745387435:geom_bar(
+1707745387472:stat = "identity",
+1707745387520:color = "black",
+1707745387558:size = .6,
+1707745387582:position = position_dodge(width = 0.75)
+1707745387605:) +
+1707745387623:geom_errorbar(
+1707745387642:aes(ymin = Mean - SE, ymax = Mean + SE),
+1707745387664:width = .2,
+1707745387683:position = position_dodge(width = 0.75)
+1707745387701:) +
+1707745387721:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707745387744:scale_y_continuous(
+1707745387765:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707745387787:# Example secondary axis (e.g., double the Mean for illustration)
+1707745387811:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707745387833:) +
+1707745387854:labs(title = "",
+1707745387873:y = "Meðalþekja", x = "") +
+1707745387896:scale_x_discrete(
+1707745387918:"",
+1707745387958:labels = c(
+1707745387983:"Mosar" = "Mosar",
+1707745388004:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707745388024:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707745388046:"Heildarþekja" = "Heildarþekja",
+1707745388068:"Tegundafjöldi" = "Tegundafjöldi"
+1707745388093:)
+1707745388117:) +
+1707745388141:theme_minimal() +
+1707745388170:theme(legend.title = element_blank(),
+1707745388196:plot.background = element_rect(fill = "white", color = NA)) +
+1707745388217:annotate(
+1707745388235:"text",
+1707745388257:x = 2,
+1707745388284:y = Inf,
+1707745388313:label = i,
+1707745388342:hjust = 1,
+1707745388364:vjust = 1,
+1707745388385:size = 8,
+1707745388410:angle = 0
+1707745388432:)
+1707745388477:p1 <-
+1707745388498:p1 + theme(
+1707745388518:axis.title = element_text(size = 16),
+1707745388540:# Increase axis titles
+1707745388565:axis.text = element_text(size = 16),
+1707745388585:# Increase axis text
+1707745388605:legend.text = element_text(size = 16)
+1707745388624:) # Increase legend text
+1707745388657:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707745388680:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707745388736:}
+1707745448955:for (i in unique(joined_data$Stadur)[15]) {
+1707745449011:filtered_data <- joined_data %>%
+1707745449034:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707745449054:select(where(~ !all(is.na(.))))
+1707745449085:# Dynamically identify year columns that exist after filtering
+1707745449104:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707745449123:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707745449157:# Pivot longer only with existing year columns
+1707745449178:jd_long <- filtered_data %>%
+1707745449198:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707745449241:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707745449282:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707745449304:# Fjöldi tegunda í reit á ári
+1707745449324:species_counts <- jd_long_Engin_NA %>%
+1707745449341:group_by(Reitur, Year) %>%
+1707745449359:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707745449379:# Meðalfjöldi tegunda í reit á ári
+1707745449398:group_by(Year) %>%
+1707745449417:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707745449451:mutate(Type = "Tegundafjöldi")|>
+1707745449477:select(Type, Year, Mean, SE)
+1707745449510:# Meðalþekja reita eftir Type
+1707745449528:df <- jd_long_Engin_NA |>
+1707745449549:group_by(Type,Year,Reitur) %>%
+1707745449567:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707745449587:group_by(Type,Year) %>%
+1707745449605:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707745449635:# heildarþekja (öll Type) allra reita innan ára
+1707745449652:df_summary <- jd_long_Engin_NA |>
+1707745449668:group_by(Year,Reitur) %>%
+1707745449687:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707745449706:group_by(Year) %>%
+1707745449727:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707745449746:mutate(Type = "Heildarþekja") |>
+1707745449765:select(Type, Year, Mean, SE)
+1707745449822:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707745449843:# Ensure Type is ordered as desired
+1707745449864:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707745449900:# Plot
+1707745449942:p1 <-
+1707745449972:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707745449995:geom_bar(
+1707745450020:stat = "identity",
+1707745450044:color = "black",
+1707745450068:size = .6,
+1707745450088:position = position_dodge(width = 0.75)
+1707745450106:) +
+1707745450123:geom_errorbar(
+1707745450142:aes(ymin = Mean - SE, ymax = Mean + SE),
+1707745450161:width = .2,
+1707745450181:position = position_dodge(width = 0.75)
+1707745450200:) +
+1707745450219:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707745450241:scale_y_continuous(
+1707745450263:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707745450290:# Example secondary axis (e.g., double the Mean for illustration)
+1707745450314:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707745450337:) +
+1707745450357:labs(title = "",
+1707745450380:y = "Meðalþekja", x = "") +
+1707745450403:scale_x_discrete(
+1707745450437:"",
+1707745450458:labels = c(
+1707745450485:"Mosar" = "Mosar",
+1707745450509:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707745450528:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707745450548:"Heildarþekja" = "Heildarþekja",
+1707745450567:"Tegundafjöldi" = "Tegundafjöldi"
+1707745450583:)
+1707745450598:) +
+1707745450615:theme_minimal() +
+1707745450630:theme(legend.title = element_blank(),
+1707745450646:plot.background = element_rect(fill = "white", color = NA)) +
+1707745450667:annotate(
+1707745450685:"text",
+1707745450700:x = 2,
+1707745450716:y = Inf,
+1707745450734:label = i,
+1707745450751:hjust = 1,
+1707745450766:vjust = 1,
+1707745450782:size = 8,
+1707745450798:angle = 0
+1707745450815:)
+1707745450853:p1 <-
+1707745450876:p1 + theme(
+1707745450894:axis.title = element_text(size = 16),
+1707745450995:# Increase axis titles
+1707745451012:axis.text = element_text(size = 16),
+1707745451083:# Increase axis text
+1707745451114:legend.text = element_text(size = 16)
+1707745451130:) # Increase legend text
+1707745451162:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707745451180:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707745451226:}
+1707745551085:for (i in unique(joined_data$Stadur)[15]) {
+1707745551169:filtered_data <- joined_data %>%
+1707745551195:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707745551248:select(where(~ !all(is.na(.))))
+1707745551281:# Dynamically identify year columns that exist after filtering
+1707745551302:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707745551320:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707745551503:# Pivot longer only with existing year columns
+1707745551527:jd_long <- filtered_data %>%
+1707745551546:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707745551574:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707745551605:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707745551631:# Fjöldi tegunda í reit á ári
+1707745551647:species_counts <- jd_long_Engin_NA %>%
+1707745551666:group_by(Reitur, Year) %>%
+1707745551686:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707745551733:# Meðalfjöldi tegunda í reit á ári
+1707745551756:group_by(Year) %>%
+1707745551773:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707745551794:mutate(Type = "Tegundafjöldi")|>
+1707745551810:select(Type, Year, Mean, SE)
+1707745551849:# Meðalþekja reita eftir Type
+1707745551869:df <- jd_long_Engin_NA |>
+1707745551888:group_by(Type,Year,Reitur) %>%
+1707745551905:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707745551959:group_by(Type,Year) %>%
+1707745551999:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707745552042:# heildarþekja (öll Type) allra reita innan ára
+1707745552061:df_summary <- jd_long_Engin_NA |>
+1707745552106:group_by(Year,Reitur) %>%
+1707745552127:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707745552153:group_by(Year) %>%
+1707745552170:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707745552188:mutate(Type = "Heildarþekja") |>
+1707745552206:select(Type, Year, Mean, SE)
+1707745552249:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707745552268:# Ensure Type is ordered as desired
+1707745552307:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707745552339:# Plot
+1707745552358:p1 <-
+1707745552376:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707745552396:geom_bar(
+1707745552434:stat = "identity",
+1707745552469:color = "black",
+1707745552494:size = .6,
+1707745552517:position = position_dodge(width = 0.75)
+1707745552536:) +
+1707745552554:# geom_errorbar(
+1707745552571:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707745552587:#   width = .2,
+1707745552635:#   position = position_dodge(width = 0.75)
+1707745552656:# ) +
+1707745552672:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707745552688:scale_y_continuous(
+1707745552704:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707745552727:# Example secondary axis (e.g., double the Mean for illustration)
+1707745552746:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707745552767:) +
+1707745552784:labs(title = "",
+1707745552799:y = "Meðalþekja", x = "") +
+1707745552816:scale_x_discrete(
+1707745552833:"",
+1707745552851:labels = c(
+1707745552871:"Mosar" = "Mosar",
+1707745552889:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707745552924:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707745552949:"Heildarþekja" = "Heildarþekja",
+1707745552966:"Tegundafjöldi" = "Tegundafjöldi"
+1707745552987:)
+1707745553005:) +
+1707745553022:theme_minimal() +
+1707745553039:theme(legend.title = element_blank(),
+1707745553055:plot.background = element_rect(fill = "white", color = NA)) +
+1707745553074:annotate(
+1707745553100:"text",
+1707745553120:x = 2,
+1707745553136:y = Inf,
+1707745553152:label = i,
+1707745553171:hjust = 1,
+1707745553186:vjust = 1,
+1707745553206:size = 8,
+1707745553222:angle = 0
+1707745553237:)
+1707745553273:p1 <-
+1707745553290:p1 + theme(
+1707745553307:axis.title = element_text(size = 16),
+1707745553323:# Increase axis titles
+1707745553342:axis.text = element_text(size = 16),
+1707745553362:# Increase axis text
+1707745553387:legend.text = element_text(size = 16)
+1707745553412:) # Increase legend text
+1707745553449:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707745553470:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707745553516:}
+1707745623798:for (i in unique(joined_data$Stadur)) {
+1707745623847:filtered_data <- joined_data %>%
+1707745623866:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707745623889:select(where(~ !all(is.na(.))))
+1707745623926:# Dynamically identify year columns that exist after filtering
+1707745623950:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707745623981:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707745624034:# Pivot longer only with existing year columns
+1707745624061:jd_long <- filtered_data %>%
+1707745624085:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707745624124:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707745624166:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707745624187:# Fjöldi tegunda í reit á ári
+1707745624205:species_counts <- jd_long_Engin_NA %>%
+1707745624226:group_by(Reitur, Year) %>%
+1707745624243:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707745624291:# Meðalfjöldi tegunda í reit á ári
+1707745624319:group_by(Year) %>%
+1707745624346:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707745624376:mutate(Type = "Tegundafjöldi")|>
+1707745624401:select(Type, Year, Mean, SE)
+1707745624444:# Meðalþekja reita eftir Type
+1707745624465:df <- jd_long_Engin_NA |>
+1707745624488:group_by(Type,Year,Reitur) %>%
+1707745624507:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707745624535:group_by(Type,Year) %>%
+1707745624552:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707745624589:# heildarþekja (öll Type) allra reita innan ára
+1707745624610:df_summary <- jd_long_Engin_NA |>
+1707745624634:group_by(Year,Reitur) %>%
+1707745624654:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707745624680:group_by(Year) %>%
+1707745624709:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707745624736:mutate(Type = "Heildarþekja") |>
+1707745624774:select(Type, Year, Mean, SE)
+1707745624839:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707745624856:# Ensure Type is ordered as desired
+1707745624873:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707745624906:# Plot
+1707745624926:p1 <-
+1707745624945:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707745624963:geom_bar(
+1707745624981:stat = "identity",
+1707745624997:color = "black",
+1707745625021:size = .6,
+1707745625046:position = position_dodge(width = 0.75)
+1707745625068:) +
+1707745625092:# geom_errorbar(
+1707745625117:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707745625141:#   width = .2,
+1707745625164:#   position = position_dodge(width = 0.75)
+1707745625186:# ) +
+1707745625208:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707745625229:scale_y_continuous(
+1707745625251:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707745625289:# Example secondary axis (e.g., double the Mean for illustration)
+1707745625309:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707745625335:) +
+1707745625355:labs(title = "",
+1707745625376:y = "Meðalþekja", x = "") +
+1707745625397:scale_x_discrete(
+1707745625414:"",
+1707745625470:labels = c(
+1707745625488:"Mosar" = "Mosar",
+1707745625505:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707745625523:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707745625581:"Heildarþekja" = "Heildarþekja",
+1707745625605:"Tegundafjöldi" = "Tegundafjöldi"
+1707745625629:)
+1707745625651:) +
+1707745625671:theme_minimal() +
+1707745625690:theme(legend.title = element_blank(),
+1707745625712:plot.background = element_rect(fill = "white", color = NA)) +
+1707745625737:annotate(
+1707745625773:"text",
+1707745625796:x = 2,
+1707745625821:y = Inf,
+1707745625850:label = i,
+1707745625870:hjust = 1,
+1707745625889:vjust = 1,
+1707745625910:size = 8,
+1707745625934:angle = 0
+1707745625955:)
+1707745625992:p1 <-
+1707745626010:p1 + theme(
+1707745626032:axis.title = element_text(size = 16),
+1707745626055:# Increase axis titles
+1707745626073:axis.text = element_text(size = 16),
+1707745626093:# Increase axis text
+1707745626112:legend.text = element_text(size = 16)
+1707745626133:) # Increase legend text
+1707745626164:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707745626183:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707745626232:}
+1707746096653:joined_data[joined_data$Reitur==65,]
+1707746110131:joined_data[joined_data$Reitur=="R65",]
+1707746515183:gc()
+1707746780933:5+5
+1707749208327:5+5
+1707751473415:joined_data[joined_data$Reitur=="R65",]
+1707751477058:joined_data[joined_data$Reitur=="R66",]
+1707751519135:joined_data <- data %>%
+1707751519153:left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
+1707751519170:select(species, Type, Reitur, km, everything()) |>
+1707751519183:#select(-c(`1999`)) |>
+1707751519198:filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+1707751519215:#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
+1707751519232:filter(!species %in% "Ber klöpp")
+1707751521927:joined_data[joined_data$Reitur=="R66",]
+1707751583341:joined_data[joined_data$Reitur=="R65",]
+1707751603343:joined_data[joined_data$Reitur==c("R65", "R66" ,]
+1707751605956:joined_data[joined_data$Reitur==c("R65", "R66") ,]
+1707751975164:unique(joined_data$Stadur)
+1707752101635:for (i in unique(joined_data$Stadur)[16]) {
+1707752101670:filtered_data <- joined_data %>%
+1707752101687:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707752101702:select(where(~ !all(is.na(.))))
+1707752101725:# Dynamically identify year columns that exist after filtering
+1707752101739:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707752101753:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707752101779:# Pivot longer only with existing year columns
+1707752101792:jd_long <- filtered_data %>%
+1707752101808:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707752101833:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707752101858:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707752101872:# Fjöldi tegunda í reit á ári
+1707752101886:species_counts <- jd_long_Engin_NA %>%
+1707752101899:group_by(Reitur, Year) %>%
+1707752101913:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707752101927:# Meðalfjöldi tegunda í reit á ári
+1707752101940:group_by(Year) %>%
+1707752101955:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707752101970:mutate(Type = "Tegundafjöldi")|>
+1707752101983:select(Type, Year, Mean, SE)
+1707752102005:# Meðalþekja reita eftir Type
+1707752102021:df <- jd_long_Engin_NA |>
+1707752102034:group_by(Type,Year,Reitur) %>%
+1707752102048:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707752102061:group_by(Type,Year) %>%
+1707752102075:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707752102101:# heildarþekja (öll Type) allra reita innan ára
+1707752102119:df_summary <- jd_long_Engin_NA |>
+1707752102135:group_by(Year,Reitur) %>%
+1707752102149:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707752102163:group_by(Year) %>%
+1707752102177:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707752102190:mutate(Type = "Heildarþekja") |>
+1707752102205:select(Type, Year, Mean, SE)
+1707752102239:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707752102254:# Ensure Type is ordered as desired
+1707752102267:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707752102295:# Plot
+1707752102307:p1 <-
+1707752102321:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707752102337:geom_bar(
+1707752102352:stat = "identity",
+1707752102366:color = "black",
+1707752102379:size = .6,
+1707752102392:position = position_dodge(width = 0.75)
+1707752102404:) +
+1707752102417:# geom_errorbar(
+1707752102432:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707752102447:#   width = .2,
+1707752102461:#   position = position_dodge(width = 0.75)
+1707752102477:# ) +
+1707752102492:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707752102506:scale_y_continuous(
+1707752102523:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707752102535:# Example secondary axis (e.g., double the Mean for illustration)
+1707752102549:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707752102564:) +
+1707752102578:labs(title = "",
+1707752102590:y = "Meðalþekja", x = "") +
+1707752102605:scale_x_discrete(
+1707752102620:"",
+1707752102634:labels = c(
+1707752102650:"Mosar" = "Mosar",
+1707752102665:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707752102682:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707752102695:"Heildarþekja" = "Heildarþekja",
+1707752102710:"Tegundafjöldi" = "Tegundafjöldi"
+1707752102725:)
+1707752102739:) +
+1707752102753:theme_minimal() +
+1707752102766:theme(legend.title = element_blank(),
+1707752102780:plot.background = element_rect(fill = "white", color = NA)) +
+1707752102794:annotate(
+1707752102809:"text",
+1707752102823:x = 2,
+1707752102837:y = Inf,
+1707752102853:label = i,
+1707752102867:hjust = 1,
+1707752102883:vjust = 1,
+1707752102898:size = 8,
+1707752102912:angle = 0
+1707752102927:)
+1707752102950:p1 <-
+1707752102964:p1 + theme(
+1707752102976:axis.title = element_text(size = 16),
+1707752102988:# Increase axis titles
+1707752103003:axis.text = element_text(size = 16),
+1707752103019:# Increase axis text
+1707752103033:legend.text = element_text(size = 16)
+1707752103048:) # Increase legend text
+1707752103075:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707752103089:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707752103131:}
+1707752111357:library(glue)
+1707752111530:library(scales)
+1707752116820:for (i in unique(joined_data$Stadur)[16]) {
+1707752116850:filtered_data <- joined_data %>%
+1707752116862:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707752116877:select(where(~ !all(is.na(.))))
+1707752116903:# Dynamically identify year columns that exist after filtering
+1707752116917:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707752116931:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707752116956:# Pivot longer only with existing year columns
+1707752116970:jd_long <- filtered_data %>%
+1707752116984:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707752117009:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707752117034:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707752117049:# Fjöldi tegunda í reit á ári
+1707752117064:species_counts <- jd_long_Engin_NA %>%
+1707752117078:group_by(Reitur, Year) %>%
+1707752117092:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707752117108:# Meðalfjöldi tegunda í reit á ári
+1707752117124:group_by(Year) %>%
+1707752117144:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707752117159:mutate(Type = "Tegundafjöldi")|>
+1707752117174:select(Type, Year, Mean, SE)
+1707752117200:# Meðalþekja reita eftir Type
+1707752117213:df <- jd_long_Engin_NA |>
+1707752117227:group_by(Type,Year,Reitur) %>%
+1707752117241:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707752117256:group_by(Type,Year) %>%
+1707752117270:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707752117296:# heildarþekja (öll Type) allra reita innan ára
+1707752117311:df_summary <- jd_long_Engin_NA |>
+1707752117324:group_by(Year,Reitur) %>%
+1707752117339:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707752117353:group_by(Year) %>%
+1707752117367:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707752117382:mutate(Type = "Heildarþekja") |>
+1707752117396:select(Type, Year, Mean, SE)
+1707752117433:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707752117448:# Ensure Type is ordered as desired
+1707752117462:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707752117487:# Plot
+1707752117500:p1 <-
+1707752117514:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707752117529:geom_bar(
+1707752117544:stat = "identity",
+1707752117559:color = "black",
+1707752117574:size = .6,
+1707752117588:position = position_dodge(width = 0.75)
+1707752117601:) +
+1707752117614:# geom_errorbar(
+1707752117628:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707752117643:#   width = .2,
+1707752117656:#   position = position_dodge(width = 0.75)
+1707752117670:# ) +
+1707752117685:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707752117698:scale_y_continuous(
+1707752117713:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707752117727:# Example secondary axis (e.g., double the Mean for illustration)
+1707752117740:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707752117752:) +
+1707752117765:labs(title = "",
+1707752117782:y = "Meðalþekja", x = "") +
+1707752117798:scale_x_discrete(
+1707752117812:"",
+1707752117826:labels = c(
+1707752117841:"Mosar" = "Mosar",
+1707752117856:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707752117870:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707752117885:"Heildarþekja" = "Heildarþekja",
+1707752117900:"Tegundafjöldi" = "Tegundafjöldi"
+1707752117914:)
+1707752117930:) +
+1707752117947:theme_minimal() +
+1707752117963:theme(legend.title = element_blank(),
+1707752117978:plot.background = element_rect(fill = "white", color = NA)) +
+1707752117992:annotate(
+1707752118007:"text",
+1707752118023:x = 2,
+1707752118039:y = Inf,
+1707752118052:label = i,
+1707752118067:hjust = 1,
+1707752118082:vjust = 1,
+1707752118096:size = 8,
+1707752118112:angle = 0
+1707752118128:)
+1707752118162:p1 <-
+1707752118179:p1 + theme(
+1707752118193:axis.title = element_text(size = 16),
+1707752118207:# Increase axis titles
+1707752118222:axis.text = element_text(size = 16),
+1707752118237:# Increase axis text
+1707752118252:legend.text = element_text(size = 16)
+1707752118269:) # Increase legend text
+1707752118299:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707752118313:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707752118351:}
+1707752189973:jd_long
+1707752197986:filtered_data
+1707752452693:####
+1707752452711:###týndar tölur
+1707752452725:joined_data$2020[joined_data$Reitur=="R65"]
+1707752470397:####
+1707752470412:###týndar tölur
+1707752470428:joined_data$´2020´[joined_data$Reitur=="R65"]
+1707752489259:####
+1707752489275:###týndar tölur
+1707752489292:joined_data$`2020`[joined_data$Reitur=="R65"]
+1707752701794:filtered_data <- joined_data %>%
+1707752701816:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707752701839:select(where(~ !all(is.na(.))))
+1707753117998:####
+1707753118020:###týndar tölur
+1707753118039:joined_data$`2020`[joined_data$Reitur=="R65"]
+1707753133238:year_columns
+1707753136548:existing_year_columns
+1707753180966:joined_data[,existing_year_columns]
+1707753208156:rowSums(joined_data[,existing_year_columns])
+1707753223662:rowSums(joined_data[,existing_year_columns],na.rm = T)
+1707753310630:joined_data$`2020` <- rowSums(joined_data[,existing_year_columns],na.rm = T)
+1707753330519:for (i in unique(joined_data$Stadur)[16]) {
+1707753330555:filtered_data <- joined_data %>%
+1707753330570:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707753330585:select(where(~ !all(is.na(.))))
+1707753330609:# Dynamically identify year columns that exist after filtering
+1707753330623:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707753330637:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707753330650:joined_data$`2020` <- rowSums(joined_data[,existing_year_columns],na.rm = T)
+1707753330663:# Pivot longer only with existing year columns
+1707753330677:jd_long <- filtered_data %>%
+1707753330690:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707753330714:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707753330738:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707753330752:# Fjöldi tegunda í reit á ári
+1707753330768:species_counts <- jd_long_Engin_NA %>%
+1707753330785:group_by(Reitur, Year) %>%
+1707753330800:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707753330817:# Meðalfjöldi tegunda í reit á ári
+1707753330833:group_by(Year) %>%
+1707753330848:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707753330865:mutate(Type = "Tegundafjöldi")|>
+1707753330881:select(Type, Year, Mean, SE)
+1707753330906:# Meðalþekja reita eftir Type
+1707753330921:df <- jd_long_Engin_NA |>
+1707753330935:group_by(Type,Year,Reitur) %>%
+1707753330950:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707753330964:group_by(Type,Year) %>%
+1707753330978:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707753331001:# heildarþekja (öll Type) allra reita innan ára
+1707753331014:df_summary <- jd_long_Engin_NA |>
+1707753331029:group_by(Year,Reitur) %>%
+1707753331043:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707753331056:group_by(Year) %>%
+1707753331070:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707753331085:mutate(Type = "Heildarþekja") |>
+1707753331101:select(Type, Year, Mean, SE)
+1707753331136:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707753331151:# Ensure Type is ordered as desired
+1707753331166:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707753331190:# Plot
+1707753331206:p1 <-
+1707753331221:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707753331235:geom_bar(
+1707753331249:stat = "identity",
+1707753331263:color = "black",
+1707753331277:size = .6,
+1707753331292:position = position_dodge(width = 0.75)
+1707753331308:) +
+1707753331323:# geom_errorbar(
+1707753331339:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707753331357:#   width = .2,
+1707753331371:#   position = position_dodge(width = 0.75)
+1707753331385:# ) +
+1707753331400:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707753331413:scale_y_continuous(
+1707753331426:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707753331440:# Example secondary axis (e.g., double the Mean for illustration)
+1707753331455:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707753331469:) +
+1707753331485:labs(title = "",
+1707753331499:y = "Meðalþekja", x = "") +
+1707753331513:scale_x_discrete(
+1707753331527:"",
+1707753331541:labels = c(
+1707753331554:"Mosar" = "Mosar",
+1707753331567:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707753331581:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707753331595:"Heildarþekja" = "Heildarþekja",
+1707753331608:"Tegundafjöldi" = "Tegundafjöldi"
+1707753331620:)
+1707753331633:) +
+1707753331647:theme_minimal() +
+1707753331663:theme(legend.title = element_blank(),
+1707753331677:plot.background = element_rect(fill = "white", color = NA)) +
+1707753331691:annotate(
+1707753331705:"text",
+1707753331716:x = 2,
+1707753331726:y = Inf,
+1707753331737:label = i,
+1707753331747:hjust = 1,
+1707753331758:vjust = 1,
+1707753331768:size = 8,
+1707753331780:angle = 0
+1707753331790:)
+1707753331816:p1 <-
+1707753331832:p1 + theme(
+1707753331845:axis.title = element_text(size = 16),
+1707753331856:# Increase axis titles
+1707753331866:axis.text = element_text(size = 16),
+1707753331877:# Increase axis text
+1707753331888:legend.text = element_text(size = 16)
+1707753331898:) # Increase legend text
+1707753331917:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707753331928:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707753331960:}
+1707753342899:df_with_heildarþekja
+1707753370890:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707753370909:geom_bar(
+1707753370927:stat = "identity",
+1707753370942:color = "black",
+1707753370957:size = .6,
+1707753370971:position = position_dodge(width = 0.75)
+1707753370984:)
+1707753394501:rowMeans(joined_data[,existing_year_columns],na.rm = T)
+1707753411526:for (i in unique(joined_data$Stadur)[16]) {
+1707753411552:filtered_data <- joined_data %>%
+1707753411564:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707753411575:select(where(~ !all(is.na(.))))
+1707753411593:# Dynamically identify year columns that exist after filtering
+1707753411605:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707753411615:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707753411626:joined_data$`2020` <- rowMeans(joined_data[,existing_year_columns],na.rm = T)
+1707753411637:# Pivot longer only with existing year columns
+1707753411648:jd_long <- filtered_data %>%
+1707753411659:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707753411679:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707753411698:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707753411709:# Fjöldi tegunda í reit á ári
+1707753411720:species_counts <- jd_long_Engin_NA %>%
+1707753411731:group_by(Reitur, Year) %>%
+1707753411743:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707753411753:# Meðalfjöldi tegunda í reit á ári
+1707753411764:group_by(Year) %>%
+1707753411775:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707753411786:mutate(Type = "Tegundafjöldi")|>
+1707753411797:select(Type, Year, Mean, SE)
+1707753411818:# Meðalþekja reita eftir Type
+1707753411830:df <- jd_long_Engin_NA |>
+1707753411841:group_by(Type,Year,Reitur) %>%
+1707753411852:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707753411863:group_by(Type,Year) %>%
+1707753411874:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707753411893:# heildarþekja (öll Type) allra reita innan ára
+1707753411905:df_summary <- jd_long_Engin_NA |>
+1707753411917:group_by(Year,Reitur) %>%
+1707753411929:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707753411941:group_by(Year) %>%
+1707753411952:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707753411964:mutate(Type = "Heildarþekja") |>
+1707753411976:select(Type, Year, Mean, SE)
+1707753412003:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707753412015:# Ensure Type is ordered as desired
+1707753412027:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707753412047:# Plot
+1707753412059:p1 <-
+1707753412070:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707753412081:geom_bar(
+1707753412093:stat = "identity",
+1707753412104:color = "black",
+1707753412115:size = .6,
+1707753412127:position = position_dodge(width = 0.75)
+1707753412138:) +
+1707753412150:# geom_errorbar(
+1707753412162:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707753412174:#   width = .2,
+1707753412185:#   position = position_dodge(width = 0.75)
+1707753412197:# ) +
+1707753412207:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707753412219:scale_y_continuous(
+1707753412231:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707753412243:# Example secondary axis (e.g., double the Mean for illustration)
+1707753412254:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707753412266:) +
+1707753412278:labs(title = "",
+1707753412290:y = "Meðalþekja", x = "") +
+1707753412301:scale_x_discrete(
+1707753412312:"",
+1707753412324:labels = c(
+1707753412336:"Mosar" = "Mosar",
+1707753412347:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707753412359:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707753412371:"Heildarþekja" = "Heildarþekja",
+1707753412384:"Tegundafjöldi" = "Tegundafjöldi"
+1707753412397:)
+1707753412409:) +
+1707753412420:theme_minimal() +
+1707753412433:theme(legend.title = element_blank(),
+1707753412444:plot.background = element_rect(fill = "white", color = NA)) +
+1707753412455:annotate(
+1707753412468:"text",
+1707753412479:x = 2,
+1707753412491:y = Inf,
+1707753412502:label = i,
+1707753412514:hjust = 1,
+1707753412528:vjust = 1,
+1707753412543:size = 8,
+1707753412559:angle = 0
+1707753412575:)
+1707753412602:p1 <-
+1707753412617:p1 + theme(
+1707753412632:axis.title = element_text(size = 16),
+1707753412647:# Increase axis titles
+1707753412661:axis.text = element_text(size = 16),
+1707753412677:# Increase axis text
+1707753412693:legend.text = element_text(size = 16)
+1707753412708:) # Increase legend text
+1707753412736:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707753412751:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707753412784:}
+1707753442830:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707753442850:geom_bar(
+1707753442869:stat = "identity",
+1707753442887:color = "black",
+1707753442903:size = .6,
+1707753442922:position = position_dodge(width = 0.75)
+1707753442939:)
+1707753457124:df_with_heildarþekja
+1707753482386:filtered_data <- joined_data %>%
+1707753482411:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707753482429:select(where(~ !all(is.na(.))))
+1707753484574:# Dynamically identify year columns that exist after filtering
+1707753484596:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707753485182:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707753486067:joined_data$`2020` <- rowMeans(joined_data[,existing_year_columns],na.rm = T)
+1707753487083:# Pivot longer only with existing year columns
+1707753487106:jd_long <- filtered_data %>%
+1707753487125:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707753495075:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707753500513:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707753500538:# Fjöldi tegunda í reit á ári
+1707753500559:species_counts <- jd_long_Engin_NA %>%
+1707753500578:group_by(Reitur, Year) %>%
+1707753500595:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707753500613:# Meðalfjöldi tegunda í reit á ári
+1707753500631:group_by(Year) %>%
+1707753500649:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707753500665:mutate(Type = "Tegundafjöldi")|>
+1707753500682:select(Type, Year, Mean, SE)
+1707753503436:# Meðalþekja reita eftir Type
+1707753503461:df <- jd_long_Engin_NA |>
+1707753503480:group_by(Type,Year,Reitur) %>%
+1707753503497:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707753503514:group_by(Type,Year) %>%
+1707753503532:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707753504788:# heildarþekja (öll Type) allra reita innan ára
+1707753504818:df_summary <- jd_long_Engin_NA |>
+1707753504840:group_by(Year,Reitur) %>%
+1707753504855:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707753504869:group_by(Year) %>%
+1707753504884:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707753504900:mutate(Type = "Heildarþekja") |>
+1707753504915:select(Type, Year, Mean, SE)
+1707753506534:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707753507690:# Ensure Type is ordered as desired
+1707753507711:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707753512109:df_with_heildarþekja
+1707753602977:t(df_with_heildarþekja)
+1707753763012:t(df_with_heildarþekja)
+1707753796220:df_with_heildarþekja
+1707753833323:df_with_heildarþekja
+1707754010976:for (i in unique(joined_data$Stadur)[16]) {
+1707754011029:filtered_data <- joined_data %>%
+1707754011049:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707754011066:select(where(~ !all(is.na(.))))
+1707754011094:# Dynamically identify year columns that exist after filtering
+1707754011116:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707754011133:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707754011151:joined_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707754011169:# Pivot longer only with existing year columns
+1707754011187:jd_long <- filtered_data %>%
+1707754011204:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707754011236:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707754011269:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707754011289:# Fjöldi tegunda í reit á ári
+1707754011313:species_counts <- jd_long_Engin_NA %>%
+1707754011341:group_by(Reitur, Year) %>%
+1707754011374:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707754011400:# Meðalfjöldi tegunda í reit á ári
+1707754011423:group_by(Year) %>%
+1707754011445:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707754011461:mutate(Type = "Tegundafjöldi")|>
+1707754011484:select(Type, Year, Mean, SE)
+1707754011515:# Meðalþekja reita eftir Type
+1707754011533:df <- jd_long_Engin_NA |>
+1707754011549:group_by(Type,Year,Reitur) %>%
+1707754011570:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707754011589:group_by(Type,Year) %>%
+1707754011609:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707754011645:# heildarþekja (öll Type) allra reita innan ára
+1707754011666:df_summary <- jd_long_Engin_NA |>
+1707754011690:group_by(Year,Reitur) %>%
+1707754011708:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707754011725:group_by(Year) %>%
+1707754011745:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707754011763:mutate(Type = "Heildarþekja") |>
+1707754011783:select(Type, Year, Mean, SE)
+1707754011828:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707754011853:# Ensure Type is ordered as desired
+1707754011874:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707754011907:# Plot
+1707754011926:p1 <-
+1707754011951:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707754011976:geom_bar(
+1707754011997:stat = "identity",
+1707754012020:color = "black",
+1707754012037:size = .6,
+1707754012057:position = position_dodge(width = 0.75)
+1707754012077:) +
+1707754012092:# geom_errorbar(
+1707754012112:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707754012129:#   width = .2,
+1707754012149:#   position = position_dodge(width = 0.75)
+1707754012165:# ) +
+1707754012186:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707754012203:scale_y_continuous(
+1707754012222:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707754012240:# Example secondary axis (e.g., double the Mean for illustration)
+1707754012262:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707754012289:) +
+1707754012317:labs(title = "",
+1707754012343:y = "Meðalþekja", x = "") +
+1707754012366:scale_x_discrete(
+1707754012395:"",
+1707754012418:labels = c(
+1707754012433:"Mosar" = "Mosar",
+1707754012451:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707754012466:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707754012482:"Heildarþekja" = "Heildarþekja",
+1707754012496:"Tegundafjöldi" = "Tegundafjöldi"
+1707754012516:)
+1707754012532:) +
+1707754012551:theme_minimal() +
+1707754012569:theme(legend.title = element_blank(),
+1707754012598:plot.background = element_rect(fill = "white", color = NA)) +
+1707754012617:annotate(
+1707754012635:"text",
+1707754012651:x = 2,
+1707754012669:y = Inf,
+1707754012683:label = i,
+1707754012697:hjust = 1,
+1707754012713:vjust = 1,
+1707754012728:size = 8,
+1707754012746:angle = 0
+1707754012764:)
+1707754012797:p1 <-
+1707754012816:p1 + theme(
+1707754012832:axis.title = element_text(size = 16),
+1707754012855:# Increase axis titles
+1707754012872:axis.text = element_text(size = 16),
+1707754012893:# Increase axis text
+1707754012921:legend.text = element_text(size = 16)
+1707754012947:) # Increase legend text
+1707754012984:Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+1707754013008:ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+1707754013057:}
+1707754019880:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707754019897:geom_bar(
+1707754019915:stat = "identity",
+1707754019927:color = "black",
+1707754019939:size = .6,
+1707754019953:position = position_dodge(width = 0.75)
+1707754019967:)
+1707754034134:df_with_heildarþekja
+1707754170039:####
+1707754170069:###týndar tölur
+1707754170089:joined_data$`2020`[joined_data$Reitur=="R65"]
+1707754174644:joined_data <- data %>%
+1707754174673:left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
+1707754174713:select(species, Type, Reitur, km, everything()) |>
+1707754174738:#select(-c(`1999`)) |>
+1707754174761:filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+1707754174778:#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
+1707754174797:filter(!species %in% "Ber klöpp")
+1707754177325:####
+1707754177352:###týndar tölur
+1707754177391:joined_data$`2020`[joined_data$Reitur=="R65"]
+1707754186709:####
+1707754186728:###týndar tölur
+1707754186747:joined_data[joined_data$Reitur=="R65",]
+1707754520530:df_with_heildarþekja
+1707754537636:dput(df_with_heildarþekja)
+1707754555834:df_with_heildarþekja[df_with_heildarþekja$Year]
+1707754561891:df_with_heildarþekja[df_with_heildarþekja$Year==2020,]
+1707754577148:df_with_heildarþekja[df_with_heildarþekja$Year==2020,3]
+1707754589023:df_with_heildarþekja[df_with_heildarþekja$Year==2020,3] <- tyndar
+1707754593422:tyndar <- c(2.87,
+1707754593444:15.67,
+1707754593461:30.70,
+1707754593479:59.24,
+1707754593491:8.67)
+1707754596207:df_with_heildarþekja[df_with_heildarþekja$Year==2020,3] <- tyndar
+1707754608415:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707754608443:geom_bar(
+1707754608466:stat = "identity",
+1707754608488:color = "black",
+1707754608507:size = .6,
+1707754608523:position = position_dodge(width = 0.75)
+1707754608543:)
+1707754668571:df_with_heildarþekja
+1707754914402:tyndar
+1707754967461:df_with_heildarþekja |>
+1707754967487:mutate(Mean == case_when(
+1707754967512:Year == 2020 & Type== "Mosar" ~ 2.87,.
+1707754967536:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67
+1707755042061:df_with_heildarþekja |>
+1707755042094:mutate(Mean == case_when(
+1707755042120:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755042195:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67
+1707755042216:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70
+1707755050215:df_with_heildarþekja |>
+1707755050239:mutate(Mean == case_when(
+1707755050259:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755050278:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755050297:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755050317:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755050344:TRUE ~ 8.67
+1707755050368:))
+1707755114806:df_with_heildarþekja |>
+1707755114838:mutate(Mean == case_when(
+1707755114865:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755114885:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755114901:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755114920:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755114939:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67
+1707755114957:))
+1707755186274:df_with_heildarþekja
+1707755286881:df_with_heildarþekja |>
+1707755286907:mutate(Mean == case_when(
+1707755286930:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755286955:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755286975:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755286996:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755287015:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67
+1707755287046:))
+1707755318397:df_with_heildarþekja |>
+1707755318429:mutate(Mean = case_when(
+1707755318456:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755318483:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755318502:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755318519:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755318536:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67
+1707755318553:))
+1707755361907:df_with_heildarþekja |>
+1707755361933:mutate(Mean = case_when(
+1707755361955:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755361975:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755362001:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755362027:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755362049:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707755362123:TRUE ~ Mean))
+1707755369567:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755369593:geom_bar(
+1707755369613:stat = "identity",
+1707755369635:color = "black",
+1707755369663:size = .6,
+1707755369689:position = position_dodge(width = 0.75)
+1707755369716:)
+1707755385889:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707755389647:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755389684:geom_bar(
+1707755389710:stat = "identity",
+1707755389728:color = "black",
+1707755389754:size = .6,
+1707755389780:position = position_dodge(width = 0.75)
+1707755389817:)
+1707755450600:filtered_data <- joined_data %>%
+1707755450624:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755450648:select(where(~ !all(is.na(.))))
+1707755450732:# Dynamically identify year columns that exist after filtering
+1707755450757:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755450775:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755450799:joined_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755473952:filtered_data <- joined_data %>%
+1707755473980:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755474003:select(where(~ !all(is.na(.))))
+1707755480552:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755480577:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755480598:joined_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755490387:joined_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755501552:filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755508948:filtered_data <- joined_data %>%
+1707755508974:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755508995:select(where(~ !all(is.na(.))))
+1707755509071:# Dynamically identify year columns that exist after filtering
+1707755509097:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755509117:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755509134:filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755509146:# Pivot longer only with existing year columns
+1707755509160:jd_long <- filtered_data %>%
+1707755509175:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707755509204:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707755509241:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707755509258:# Fjöldi tegunda í reit á ári
+1707755509277:species_counts <- jd_long_Engin_NA %>%
+1707755509294:group_by(Reitur, Year) %>%
+1707755509314:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707755509331:# Meðalfjöldi tegunda í reit á ári
+1707755509355:group_by(Year) %>%
+1707755509377:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707755509399:mutate(Type = "Tegundafjöldi")|>
+1707755509423:select(Type, Year, Mean, SE)
+1707755509472:# Meðalþekja reita eftir Type
+1707755509491:df <- jd_long_Engin_NA |>
+1707755509512:group_by(Type,Year,Reitur) %>%
+1707755509546:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707755509569:group_by(Type,Year) %>%
+1707755509593:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707755509656:# heildarþekja (öll Type) allra reita innan ára
+1707755509681:df_summary <- jd_long_Engin_NA |>
+1707755509699:group_by(Year,Reitur) %>%
+1707755509720:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707755509742:group_by(Year) %>%
+1707755509761:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707755509784:mutate(Type = "Heildarþekja") |>
+1707755509808:select(Type, Year, Mean, SE)
+1707755509910:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707755515417:df_with_heildarþekja
+1707755524155:# Ensure Type is ordered as desired
+1707755524179:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707755528060:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755528083:geom_bar(
+1707755528103:stat = "identity",
+1707755528123:color = "black",
+1707755528142:size = .6,
+1707755528170:position = position_dodge(width = 0.75)
+1707755528195:)
+1707755543756:# tyndar
+1707755543780:df_with_heildarþekja[df_with_heildarþekja$Year==2020,3] <- tyndar
+1707755546482:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755546505:geom_bar(
+1707755546535:stat = "identity",
+1707755546569:color = "black",
+1707755546587:size = .6,
+1707755546608:position = position_dodge(width = 0.75)
+1707755546627:)
+1707755562780:tyndar <- c(2.87,
+1707755562807:15.67,
+1707755562825:30.70,
+1707755562847:59.24,
+1707755562862:8.67)
+1707755572064:df_with_heildarþekja |>
+1707755572089:mutate(Mean = case_when(
+1707755572117:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755572146:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755572169:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755572192:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755572212:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707755572232:TRUE ~ Mean))
+1707755573959:# Ensure Type is ordered as desired
+1707755573985:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707755575938:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755575967:geom_bar(
+1707755575986:stat = "identity",
+1707755576004:color = "black",
+1707755576019:size = .6,
+1707755576035:position = position_dodge(width = 0.75)
+1707755576053:)
+1707755590892:filtered_data <- joined_data %>%
+1707755590918:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755590950:select(where(~ !all(is.na(.))))
+1707755591030:# Dynamically identify year columns that exist after filtering
+1707755591048:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755591064:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755591083:filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755591102:# Pivot longer only with existing year columns
+1707755591127:jd_long <- filtered_data %>%
+1707755591146:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707755591187:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707755591227:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707755591247:# Fjöldi tegunda í reit á ári
+1707755591266:species_counts <- jd_long_Engin_NA %>%
+1707755591287:group_by(Reitur, Year) %>%
+1707755591303:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707755591320:# Meðalfjöldi tegunda í reit á ári
+1707755591335:group_by(Year) %>%
+1707755591355:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707755591373:mutate(Type = "Tegundafjöldi")|>
+1707755591395:select(Type, Year, Mean, SE)
+1707755591449:# Meðalþekja reita eftir Type
+1707755591476:df <- jd_long_Engin_NA |>
+1707755591503:group_by(Type,Year,Reitur) %>%
+1707755591520:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707755591538:group_by(Type,Year) %>%
+1707755591552:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707755591593:# heildarþekja (öll Type) allra reita innan ára
+1707755591613:df_summary <- jd_long_Engin_NA |>
+1707755591627:group_by(Year,Reitur) %>%
+1707755591644:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707755591658:group_by(Year) %>%
+1707755591676:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707755591691:mutate(Type = "Heildarþekja") |>
+1707755591706:select(Type, Year, Mean, SE)
+1707755591781:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707755595236:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755595266:geom_bar(
+1707755595292:stat = "identity",
+1707755595313:color = "black",
+1707755595330:size = .6,
+1707755595347:position = position_dodge(width = 0.75)
+1707755595362:)
+1707755620624:joined_data <- data %>%
+1707755620649:left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
+1707755620668:select(species, Type, Reitur, km, everything()) |>
+1707755620685:#select(-c(`1999`)) |>
+1707755620703:filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+1707755620718:#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
+1707755620738:filter(!species %in% "Ber klöpp")
+1707755630960:filtered_data <- joined_data %>%
+1707755630981:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755631002:select(where(~ !all(is.na(.))))
+1707755631084:# Dynamically identify year columns that exist after filtering
+1707755631099:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755631127:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755631149:filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755631169:# Pivot longer only with existing year columns
+1707755631189:jd_long <- filtered_data %>%
+1707755631206:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707755631245:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707755631286:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707755631311:# Fjöldi tegunda í reit á ári
+1707755631341:species_counts <- jd_long_Engin_NA %>%
+1707755631361:group_by(Reitur, Year) %>%
+1707755631393:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707755631415:# Meðalfjöldi tegunda í reit á ári
+1707755631432:group_by(Year) %>%
+1707755631449:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707755631466:mutate(Type = "Tegundafjöldi")|>
+1707755631483:select(Type, Year, Mean, SE)
+1707755631528:# Meðalþekja reita eftir Type
+1707755631545:df <- jd_long_Engin_NA |>
+1707755631562:group_by(Type,Year,Reitur) %>%
+1707755631580:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707755631602:group_by(Type,Year) %>%
+1707755631624:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707755631674:# heildarþekja (öll Type) allra reita innan ára
+1707755631695:df_summary <- jd_long_Engin_NA |>
+1707755631709:group_by(Year,Reitur) %>%
+1707755631725:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707755631742:group_by(Year) %>%
+1707755631759:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707755631779:mutate(Type = "Heildarþekja") |>
+1707755631797:select(Type, Year, Mean, SE)
+1707755631858:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707755638582:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755638611:geom_bar(
+1707755638639:stat = "identity",
+1707755638666:color = "black",
+1707755638687:size = .6,
+1707755638706:position = position_dodge(width = 0.75)
+1707755638723:)
+1707755645597:# Ensure Type is ordered as desired
+1707755645628:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707755647919:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755647941:geom_bar(
+1707755647957:stat = "identity",
+1707755647975:color = "black",
+1707755647997:size = .6,
+1707755648018:position = position_dodge(width = 0.75)
+1707755648035:)
+1707755673090:# tyndar
+1707755673114:df_with_heildarþekja[df_with_heildarþekja$Year==2020,3] <- tyndar
+1707755677962:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755677988:geom_bar(
+1707755678014:stat = "identity",
+1707755678035:color = "black",
+1707755678058:size = .6,
+1707755678084:position = position_dodge(width = 0.75)
+1707755678108:)
+1707755749511:filtered_data <- joined_data %>%
+1707755749532:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707755749556:select(where(~ !all(is.na(.))))
+1707755749633:# Dynamically identify year columns that exist after filtering
+1707755749677:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707755749709:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707755749729:filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707755749755:# Pivot longer only with existing year columns
+1707755749780:jd_long <- filtered_data %>%
+1707755749813:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707755749871:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707755749908:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707755749925:# Fjöldi tegunda í reit á ári
+1707755749943:species_counts <- jd_long_Engin_NA %>%
+1707755749960:group_by(Reitur, Year) %>%
+1707755749978:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707755749997:# Meðalfjöldi tegunda í reit á ári
+1707755750015:group_by(Year) %>%
+1707755750030:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707755750046:mutate(Type = "Tegundafjöldi")|>
+1707755750063:select(Type, Year, Mean, SE)
+1707755750115:# Meðalþekja reita eftir Type
+1707755750133:df <- jd_long_Engin_NA |>
+1707755750152:group_by(Type,Year,Reitur) %>%
+1707755750173:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707755750190:group_by(Type,Year) %>%
+1707755750211:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707755750254:# heildarþekja (öll Type) allra reita innan ára
+1707755750273:df_summary <- jd_long_Engin_NA |>
+1707755750292:group_by(Year,Reitur) %>%
+1707755750311:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707755750332:group_by(Year) %>%
+1707755750355:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707755750376:mutate(Type = "Heildarþekja") |>
+1707755750398:select(Type, Year, Mean, SE)
+1707755750476:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707755755775:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755755802:geom_bar(
+1707755755824:stat = "identity",
+1707755755851:color = "black",
+1707755755883:size = .6,
+1707755755901:position = position_dodge(width = 0.75)
+1707755755918:)
+1707755767347:# Ensure Type is ordered as desired
+1707755767370:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707755770945:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755770963:geom_bar(
+1707755770982:stat = "identity",
+1707755770996:color = "black",
+1707755771012:size = .6,
+1707755771025:position = position_dodge(width = 0.75)
+1707755771041:)
+1707755840756:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707755840789:mutate(Mean = case_when(
+1707755840815:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707755840840:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707755840863:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707755840887:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707755840905:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707755840924:TRUE ~ Mean))
+1707755845624:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707755845649:geom_bar(
+1707755845669:stat = "identity",
+1707755845687:color = "black",
+1707755845704:size = .6,
+1707755845720:position = position_dodge(width = 0.75)
+1707755845744:)
+1707756010240:df_with_heildarþekja
+1707756127728:joined_data[joined_data$Stadur=="Kalastaðakot",]
+1707756151063:joined_data[joined_data$Stadur=="Kalastaðakot",  joined_data$`2017`]
+1707756167501:joined_data[joined_data$Stadur=="Kalastaðakot",10]
+1707756182579:joined_data[joined_data$Stadur=="Kalastaðakot",]
+1707756246111:joined_data[joined_data$Stadur=="Kalastaðakot" & joined_data=="Blað- og runnfléttur",]
+1707756255766:joined_data[joined_data$Stadur=="Kalastaðakot" & joined_data$Type=="Blað- og runnfléttur",]
+1707756333530:colMeans(joined_data[joined_data$Stadur=="Kalastaðakot" & joined_data$Type=="Blað- og runnfléttur",])
+1707756356849:colMeans(joined_data[joined_data$Stadur=="Kalastaðakot" & joined_data$Type=="Blað- og runnfléttur",year_columns])
+1707756363561:colMeans(joined_data[joined_data$Stadur=="Kalastaðakot" & joined_data$Type=="Blað- og runnfléttur",year_columns],na.rm = T)
+1707756525795:filtered_data <- joined_data %>%
+1707756525828:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707756525868:select(where(~ !all(is.na(.))))
+1707756544631:# Dynamically identify year columns that exist after filtering
+1707756544664:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707756545765:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707756567370:filtered_data
+1707756593442:#filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707756593468:# Pivot longer only with existing year columns
+1707756593490:jd_long <- filtered_data %>%
+1707756593507:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707756598281:jd_long
+1707756673273:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707756675697:jd_long_Engin_NA
+1707756716233:table(jd_long_Engin_NA$Type)
+1707756741148:table(jd_long_Engin_NA$species)
+1707756783850:jd_long_Engin_NA %>%
+1707756783872:group_by(Reitur, Year) %>%
+1707756783889:summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
+1707756838119:jd_long_Engin_NA %>%
+1707756838142:group_by(Reitur, Year) %>%
+1707756838165:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707756838186:# Meðalfjöldi tegunda í reit á ári
+1707756838207:group_by(Year) %>%
+1707756838225:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707756838253:mutate(Type = "Tegundafjöldi")|>
+1707756838277:select(Type, Year, Mean, SE)
+1707756852941:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707756852970:# Fjöldi tegunda í reit á ári
+1707756853005:species_counts <- jd_long_Engin_NA %>%
+1707756853032:group_by(Reitur, Year) %>%
+1707756853053:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707756853072:# Meðalfjöldi tegunda í reit á ári
+1707756853088:group_by(Year) %>%
+1707756853102:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707756853116:mutate(Type = "Tegundafjöldi")|>
+1707756853133:select(Type, Year, Mean, SE)
+1707756859857:species_counts
+1707756880163:jd_long_Engin_NA
+1707756897653:jd_long_Engin_NA |>
+1707756897675:group_by(Type,Year,Reitur) %>%
+1707756897699:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop')
+1707757015093:jd_long_Engin_NA |>
+1707757015115:group_by(Type,Year,Reitur) %>%
+1707757015137:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757015155:group_by(Type,Year) %>%
+1707757015172:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757157152:jd_long_Engin_NA |>
+1707757157175:group_by(Type,Year,Reitur) %>%
+1707757157195:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757157212:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757157228:summarise(Mean=Summa/unique(Reitur) ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757198759:length(unique(Reitur))
+1707757209560:jd_long_Engin_NA |>
+1707757209583:group_by(Type,Year,Reitur) %>%
+1707757209604:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757209633:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757209654:summarise(Mean=Summa/length(unique(Reitur)) ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757228952:# Meðalþekja reita eftir Type
+1707757228979:df <- jd_long_Engin_NA |>
+1707757228998:group_by(Type,Year,Reitur) %>%
+1707757229016:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757229035:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757229057:summarise(Mean=Summa/length(unique(Reitur)) ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757230704:# heildarþekja (öll Type) allra reita innan ára
+1707757230733:df_summary <- jd_long_Engin_NA |>
+1707757230758:group_by(Year,Reitur) %>%
+1707757230779:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707757230804:group_by(Year) %>%
+1707757230841:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707757230866:mutate(Type = "Heildarþekja") |>
+1707757230891:select(Type, Year, Mean, SE)
+1707757231846:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707757243763:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707757243791:geom_bar(
+1707757243817:stat = "identity",
+1707757243837:color = "black",
+1707757243860:size = .6,
+1707757243881:position = position_dodge(width = 0.75)
+1707757243900:)
+1707757300348:length(unique(Reitur)
+1707757304902:length(unique(Reitur))
+1707757314019:length(unique(joined_data$Reitur))
+1707757322004:length(unique(jd_long_Engin_NA$Reitur))
+1707757340457:# Meðalþekja reita eftir Type
+1707757340483:df <- jd_long_Engin_NA |>
+1707757340504:group_by(Type,Year,Reitur) %>%
+1707757340523:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757340539:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757340558:summarise(Mean=Summa/3 ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757340957:# heildarþekja (öll Type) allra reita innan ára
+1707757340977:df_summary <- jd_long_Engin_NA |>
+1707757340991:group_by(Year,Reitur) %>%
+1707757341004:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707757341015:group_by(Year) %>%
+1707757341029:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707757341043:mutate(Type = "Heildarþekja") |>
+1707757341055:select(Type, Year, Mean, SE)
+1707757344148:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707757348096:# Ensure Type is ordered as desired
+1707757348126:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707757352910:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707757352935:geom_bar(
+1707757352958:stat = "identity",
+1707757352983:color = "black",
+1707757353004:size = .6,
+1707757353022:position = position_dodge(width = 0.75)
+1707757353040:) +
+1707757353061:#
+1707757361823:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707757361843:geom_bar(
+1707757361862:stat = "identity",
+1707757361882:color = "black",
+1707757361898:size = .6,
+1707757361917:position = position_dodge(width = 0.75)
+1707757361933:)
+1707757414388:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707757414417:mutate(Mean = case_when(
+1707757414450:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707757414471:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707757414491:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707757414509:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707757414527:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707757414547:TRUE ~ Mean))
+1707757418353:# Ensure Type is ordered as desired
+1707757418378:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707757422179:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707757422202:geom_bar(
+1707757422223:stat = "identity",
+1707757422246:color = "black",
+1707757422263:size = .6,
+1707757422292:position = position_dodge(width = 0.75)
+1707757422321:)
+1707757468285:df_with_heildarþekja
+1707757476492:df_with_heildarþekja
+1707757518575:i
+1707757526762:joined_data <- data %>%
+1707757526792:left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`. Þá gæti verið að plyr pakkinn sé í gangi og að þvælast fyrir
+1707757526813:select(species, Type, Reitur, km, everything()) |>
+1707757526835:#select(-c(`1999`)) |>
+1707757526858:filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+1707757526877:#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
+1707757526894:filter(!species %in% "Ber klöpp")
+1707757544083:filtered_data <- joined_data %>%
+1707757544118:filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707757544143:select(where(~ !all(is.na(.))))
+1707757545616:# Dynamically identify year columns that exist after filtering
+1707757545646:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707757546114:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707757547427:#filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707757547457:# Pivot longer only with existing year columns
+1707757547482:jd_long <- filtered_data %>%
+1707757547506:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707757551105:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707757552623:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707757552651:# Fjöldi tegunda í reit á ári
+1707757552675:species_counts <- jd_long_Engin_NA %>%
+1707757552697:group_by(Reitur, Year) %>%
+1707757552718:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707757552742:# Meðalfjöldi tegunda í reit á ári
+1707757552764:group_by(Year) %>%
+1707757552786:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707757552804:mutate(Type = "Tegundafjöldi")|>
+1707757552821:select(Type, Year, Mean, SE)
+1707757553757:# Meðalþekja reita eftir Type
+1707757553786:df <- jd_long_Engin_NA |>
+1707757553817:group_by(Type,Year,Reitur) %>%
+1707757553844:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757553873:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757553891:summarise(Mean=Summa/3 ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757555487:# heildarþekja (öll Type) allra reita innan ára
+1707757555519:df_summary <- jd_long_Engin_NA |>
+1707757555546:group_by(Year,Reitur) %>%
+1707757555566:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707757555582:group_by(Year) %>%
+1707757555594:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707757555617:mutate(Type = "Heildarþekja") |>
+1707757555635:select(Type, Year, Mean, SE)
+1707757556092:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707757562553:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707757562573:mutate(Mean = case_when(
+1707757562592:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707757562608:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707757562623:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707757562638:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707757562651:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707757562671:TRUE ~ Mean))
+1707757564498:# Ensure Type is ordered as desired
+1707757564531:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707757569069:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707757569094:geom_bar(
+1707757569112:stat = "identity",
+1707757569133:color = "black",
+1707757569151:size = .6,
+1707757569169:position = position_dodge(width = 0.75)
+1707757569183:)
+1707757580621:df_with_heildarþekja
+1707757639265:print(df_with_heildarþekja, n=100)
+1707757732344:existing_year_columns
+1707757751966:jd_long_Engin_NA |>
+1707757751999:group_by(Type,Year,Reitur) %>%
+1707757752024:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757752047:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757752067:summarise(Mean=Summa/3 ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757794939:jd_long_Engin_NA |>
+1707757794963:group_by(Type,Year,Reitur) %>%
+1707757794987:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757795006:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757795022:summarise(Mean=Summa/3 ,SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+1707757829023:jd_long_Engin_NA |>
+1707757829048:group_by(Type,Year,Reitur) %>%
+1707757829069:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707757829087:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707757829108:summarise(Mean=Summa/3 , .groups = 'drop')
+1707757903255:search()
+1707758014977:jd_long |>
+1707758015002:group_by(Type,Year,Reitur) %>%
+1707758015028:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707758015047:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707758015064:summarise(Mean=mean(Summa, na.rm=TRUE), .groups = 'drop')
+1707758091803:# heildarþekja (öll Type) allra reita innan ára
+1707758091828:df_summary <- jd_long_Engin_NA |>
+1707758091849:group_by(Year,Reitur) %>%
+1707758091867:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707758091883:group_by(Year) %>%
+1707758091901:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707758091922:mutate(Type = "Heildarþekja") |>
+1707758091954:select(Type, Year, Mean, SE)
+1707758092026:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707758098420:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707758098447:mutate(Mean = case_when(
+1707758098477:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707758098495:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707758098516:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707758098532:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707758098556:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707758098583:TRUE ~ Mean))
+1707758101104:# Ensure Type is ordered as desired
+1707758101135:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707758105425:# Plot
+1707758105458:p1 <-
+1707758105484:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758105509:geom_bar(
+1707758105532:stat = "identity",
+1707758105549:color = "black",
+1707758105564:size = .6,
+1707758105579:position = position_dodge(width = 0.75)
+1707758105595:) +
+1707758105608:# geom_errorbar(
+1707758105625:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707758105638:#   width = .2,
+1707758105653:#   position = position_dodge(width = 0.75)
+1707758105667:# ) +
+1707758105680:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707758105695:scale_y_continuous(
+1707758105710:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707758105728:# Example secondary axis (e.g., double the Mean for illustration)
+1707758105747:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707758105766:) +
+1707758105784:labs(title = "",
+1707758105804:y = "Meðalþekja", x = "") +
+1707758105822:scale_x_discrete(
+1707758105851:"",
+1707758105876:labels = c(
+1707758105903:"Mosar" = "Mosar",
+1707758105929:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707758105957:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707758105982:"Heildarþekja" = "Heildarþekja",
+1707758106000:"Tegundafjöldi" = "Tegundafjöldi"
+1707758106017:)
+1707758106034:) +
+1707758106052:theme_minimal() +
+1707758106066:theme(legend.title = element_blank(),
+1707758106083:plot.background = element_rect(fill = "white", color = NA)) +
+1707758106106:annotate(
+1707758106122:"text",
+1707758106137:x = 2,
+1707758106158:y = Inf,
+1707758106179:label = i,
+1707758106195:hjust = 1,
+1707758106209:vjust = 1,
+1707758106224:size = 8,
+1707758106240:angle = 0
+1707758106257:)
+1707758125887:# Plot
+1707758125915:p1 <-
+1707758125938:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758125955:geom_bar(
+1707758125971:stat = "identity",
+1707758125988:color = "black",
+1707758126006:size = .6,
+1707758126020:position = position_dodge(width = 0.75)
+1707758126038:) +
+1707758126055:# geom_errorbar(
+1707758126075:#   aes(ymin = Mean - SE, ymax = Mean + SE),
+1707758126098:#   width = .2,
+1707758126123:#   position = position_dodge(width = 0.75)
+1707758126143:# ) +
+1707758126159:scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+1707758126179:scale_y_continuous(
+1707758126196:labels = label_dollar(prefix = "", suffix = " \n%"),
+1707758126216:# Example secondary axis (e.g., double the Mean for illustration)
+1707758126233:sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+1707758126252:) +
+1707758126270:labs(title = "",
+1707758126293:y = "Meðalþekja", x = "") +
+1707758126312:scale_x_discrete(
+1707758126331:"",
+1707758126350:labels = c(
+1707758126370:"Mosar" = "Mosar",
+1707758126396:"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+1707758126428:"Hrúðurfléttur" = "Hrúðurfléttur",
+1707758126455:"Heildarþekja" = "Heildarþekja",
+1707758126477:"Tegundafjöldi" = "Tegundafjöldi"
+1707758126500:)
+1707758126522:) +
+1707758126541:theme_minimal() +
+1707758126560:theme(legend.title = element_blank(),
+1707758126577:plot.background = element_rect(fill = "white", color = NA)) +
+1707758126594:annotate(
+1707758126610:"text",
+1707758126630:x = 2,
+1707758126647:y = Inf,
+1707758126668:label = i,
+1707758126682:hjust = 1,
+1707758126701:vjust = 1,
+1707758126720:size = 8,
+1707758126740:angle = 0
+1707758126756:)
+1707758169230:df
+1707758184159:jd_long |>
+1707758184181:group_by(Type,Year,Reitur) %>%
+1707758184203:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707758184232:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707758184253:summarise(Mean=mean(Summa, na.rm=TRUE), .groups = 'drop')
+1707758191313:df <- jd_long |>
+1707758191340:group_by(Type,Year,Reitur) %>%
+1707758191362:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707758191388:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707758191413:summarise(Mean=mean(Summa, na.rm=TRUE), .groups = 'drop')
+1707758196138:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707758200444:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707758200468:mutate(Mean = case_when(
+1707758200486:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707758200501:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707758200526:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707758200546:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707758200564:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707758200587:TRUE ~ Mean))
+1707758201942:# Ensure Type is ordered as desired
+1707758201970:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707758205722:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758205745:geom_bar(
+1707758205763:stat = "identity",
+1707758205782:color = "black",
+1707758205801:size = .6,
+1707758205819:position = position_dodge(width = 0.75)
+1707758205845:)
+1707758264301:# heildarþekja (öll Type) allra reita innan ára
+1707758264334:df_summary <- jd_long |>
+1707758264366:group_by(Year,Reitur) %>%
+1707758264397:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707758264421:group_by(Year) %>%
+1707758264440:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707758264454:mutate(Type = "Heildarþekja") |>
+1707758264471:select(Type, Year, Mean, SE)
+1707758269710:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707758274691:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707758274725:mutate(Mean = case_when(
+1707758274748:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707758274781:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707758274818:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707758274835:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707758274852:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707758274869:TRUE ~ Mean))
+1707758276484:# Ensure Type is ordered as desired
+1707758276512:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707758280243:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758280264:geom_bar(
+1707758280284:stat = "identity",
+1707758280307:color = "black",
+1707758280331:size = .6,
+1707758280356:position = position_dodge(width = 0.75)
+1707758280381:)
+1707758290334:df_with_heildarþekja
+1707758500538:filtered_data <- joined_data %>%
+1707758500561:#filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707758500583:select(where(~ !all(is.na(.))))
+1707758500619:# Dynamically identify year columns that exist after filtering
+1707758500637:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707758500657:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707758500677:#filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707758500704:# Pivot longer only with existing year columns
+1707758500732:jd_long <- filtered_data %>%
+1707758500755:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707758500799:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707758500855:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707758500881:# Fjöldi tegunda í reit á ári
+1707758500908:species_counts <- jd_long_Engin_NA %>%
+1707758500930:group_by(Reitur, Year) %>%
+1707758500953:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707758500970:# Meðalfjöldi tegunda í reit á ári
+1707758500986:group_by(Year) %>%
+1707758501003:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707758501018:mutate(Type = "Tegundafjöldi")|>
+1707758501037:select(Type, Year, Mean, SE)
+1707758501097:# Meðalþekja reita eftir Type
+1707758501117:df <- jd_long |>
+1707758501132:group_by(Type,Year,Reitur) %>%
+1707758501153:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707758501167:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707758501186:summarise(Mean=mean(Summa, na.rm=TRUE), .groups = 'drop')
+1707758501258:# heildarþekja (öll Type) allra reita innan ára
+1707758501272:df_summary <- jd_long |>
+1707758501293:group_by(Year,Reitur) %>%
+1707758501309:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707758501330:group_by(Year) %>%
+1707758501366:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707758501394:mutate(Type = "Heildarþekja") |>
+1707758501418:select(Type, Year, Mean, SE)
+1707758501491:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707758504780:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707758504813:mutate(Mean = case_when(
+1707758504839:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707758504858:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707758504877:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707758504893:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707758504906:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707758504922:TRUE ~ Mean))
+1707758510007:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758510029:geom_bar(
+1707758510048:stat = "identity",
+1707758510066:color = "black",
+1707758510084:size = .6,
+1707758510106:position = position_dodge(width = 0.75)
+1707758510119:)
+1707758571567:# Ensure Type is ordered as desired
+1707758571591:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707758575172:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758575204:geom_bar(
+1707758575233:stat = "identity",
+1707758575273:color = "black",
+1707758575319:size = .6,
+1707758575334:position = position_dodge(width = 0.75)
+1707758575355:)
+1707758656396:filtered_data <- joined_data %>%
+1707758656426:filter(Stadur %in% i ) |>  #& !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+1707758656455:select(where(~ !all(is.na(.))))
+1707758665089:# Dynamically identify year columns that exist after filtering
+1707758665117:year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+1707758665142:existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+1707758665175:#filtered_data$`2020` <- rowMeans(filtered_data[,existing_year_columns],na.rm = T)
+1707758665203:# Pivot longer only with existing year columns
+1707758665218:jd_long <- filtered_data %>%
+1707758665236:pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+1707758665271:jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+1707758665300:# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+1707758665318:# Fjöldi tegunda í reit á ári
+1707758665338:species_counts <- jd_long_Engin_NA %>%
+1707758665358:group_by(Reitur, Year) %>%
+1707758665383:summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+1707758665405:# Meðalfjöldi tegunda í reit á ári
+1707758665428:group_by(Year) %>%
+1707758665448:summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+1707758665472:mutate(Type = "Tegundafjöldi")|>
+1707758665503:select(Type, Year, Mean, SE)
+1707758665562:# Meðalþekja reita eftir Type
+1707758665581:df <- jd_long |>
+1707758665602:group_by(Type,Year,Reitur) %>%
+1707758665619:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+1707758665637:group_by(Type,Year) %>% #Passa ef það dettu út ár
+1707758665654:summarise(Mean=mean(Summa, na.rm=TRUE), .groups = 'drop')
+1707758665695:# heildarþekja (öll Type) allra reita innan ára
+1707758665716:df_summary <- jd_long |>
+1707758665731:group_by(Year,Reitur) %>%
+1707758665751:summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+1707758665770:group_by(Year) %>%
+1707758665794:summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+1707758665820:mutate(Type = "Heildarþekja") |>
+1707758665843:select(Type, Year, Mean, SE)
+1707758665926:df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+1707758669175:df_with_heildarþekja  <- df_with_heildarþekja |>
+1707758669198:mutate(Mean = case_when(
+1707758669221:Year == 2020 & Type== "Mosar" ~ 2.87,
+1707758669237:Year == 2020 & Type== "Blað- og runnfléttur" ~ 15.67,
+1707758669262:Year == 2020 & Type== "Hrúðurfléttur"~ 30.70,
+1707758669287:Year == 2020 & Type== "Heildarþekja" ~ 59.24,
+1707758669304:Year == 2020 & Type== "Tegundafjöldi" ~ 8.67,
+1707758669326:TRUE ~ Mean))
+1707758671060:# Ensure Type is ordered as desired
+1707758671086:df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+1707758675655:ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+1707758675680:geom_bar(
+1707758675696:stat = "identity",
+1707758675718:color = "black",
+1707758675735:size = .6,
+1707758675762:position = position_dodge(width = 0.75)
+1707758675786:)

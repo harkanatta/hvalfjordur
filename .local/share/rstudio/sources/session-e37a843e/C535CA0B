@@ -3,7 +3,7 @@
     "path": "~/myndir.R",
     "project_path": null,
     "type": "r_source",
-    "hash": "358560985",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1707216101141.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "282,99",
-        "scrollLine": "266"
+        "cursorPosition": "23,10",
+        "scrollLine": "14"
     },
     "folds": "",
     "lastKnownWriteTime": 1707497117,

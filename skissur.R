@@ -545,3 +545,63 @@ p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean)) +
  # View the filtered data
  print(filtered_data)
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ KM <- read.csv("gogn/coverkm.csv", check.names = F)
+ KM <-  KM[, -c(7:9)]
+ data <- read.csv("gogn/hreinsad.csv", check.names = F) 
+ FogS <- FogS <- read.csv("gogn/Reitir_myndir_lykill.csv", encoding = "latin1")
+ 
+ plot_data <- data %>%
+   mutate(CoverageChange = (`2023` - `2020`)/`2020`) %>%
+   left_join(KM, by = c("Reitur", "Type", "species")) %>%
+   select(species, Type, Stadur, Reitur, km, Fluor, Brennisteinn, everything()) %>%
+   filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+            !is.na(CoverageChange) &
+            Type %in% "Blað- og runnfléttur") %>%
+   mutate(PointType = case_when(
+     Fluor == 1 ~ "Fluor",
+     Brennisteinn == 1 & Fluor == 0 ~ "Brennisteinn",
+     TRUE ~ "Other"
+   )) %>%
+   select(-c(`1976`, `1997`, `2006`, `2011`, `1999`,`2014`, `2017`)) %>%
+   ddply(.(km, Stadur, Reitur, PointType), summarize, CoverageChange=mean(CoverageChange, na.rm=TRUE))
+ 
+ 
+ # Define colors from Dark2 palette
+ colors_dark2 <- brewer.pal(3, "Dark2")
+ 
+ # Adjust your ggplot code with updated legend
+ ggplot(plot_data, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point(size = 3) + # Increase point size
+   geom_smooth(data = subset(plot_data, PointType == "Other"), method = "lm", se = TRUE, aes(group = 1, color = "Other")) +
+   scale_shape_manual(values = c("Fluor" = 17, "Brennisteinn" = 15, "Other" = 1)) +
+   scale_color_manual(values = c("Fluor" = colors_dark2[1], "Brennisteinn" = colors_dark2[2], "Other" = colors_dark2[3])) +
+   theme_minimal() +
+   theme(panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) + # Add frame around the plot area
+   labs(title = "Blað- og runnfléttur",
+        x = "Fjarlægð frá Grundartanga (km)",
+        y = "Þekjubreyting 2020-2023 (prósentustig)",
+        shape = "Reitir", # Change legend title for shapes
+        color = "Reitir") + # Change legend title for colors
+   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))), # Ensure legend matches plot symbols
+          shape = guide_legend(override.aes = list(color = colors_dark2))) # Match colors in legend
+ 
+ 
+ 

@@ -19,7 +19,7 @@ joined_data <- data %>%
 ### lúppa fyrir myndir allra staða - stöplarit: "Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"
 #########
 
-for (i in unique(joined_data$Stadur)) {
+for (i in unique(joined_data$Stadur)[9]) {
   
   filtered_data <- joined_data %>%
     filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
@@ -47,14 +47,14 @@ species_counts <- jd_long_Engin_NA %>%
   select(Type, Year, Mean, SE)
 
 # Meðalþekja reita eftir Type
-df <- jd_long_Engin_NA |> 
+df <- jd_long |> 
   group_by(Type,Year,Reitur) %>% 
   summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |> 
   group_by(Type,Year) %>% 
   summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
 
 # heildarþekja (öll Type) allra reita innan ára
-df_summary <- jd_long_Engin_NA |> 
+df_summary <- jd_long |> 
   group_by(Year,Reitur) %>% 
   summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
   group_by(Year) %>% 
@@ -76,11 +76,11 @@ p1 <-
     size = .6,
     position = position_dodge(width = 0.75)
   ) +
-  # geom_errorbar(
-  #   aes(ymin = Mean - SE, ymax = Mean + SE),
-  #   width = .2,
-  #   position = position_dodge(width = 0.75)
-  # ) +
+   # geom_errorbar(
+   #   aes(ymin = Mean - SE, ymax = Mean + SE),
+   #   width = .2,
+   #   position = position_dodge(width = 0.75)
+   # ) +
   scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
   scale_y_continuous(
     labels = label_dollar(prefix = "", suffix = " \n%"),
@@ -106,12 +106,13 @@ p1 <-
     "text",
     x = 2,
     y = Inf,
-    label = i,
+    label = "Álfholt",
     hjust = 1,
     vjust = 1,
     size = 8,
     angle = 0
-  )
+  ) +
+  theme(text = element_text(family = "Arial Unicode MS")) # Ensure the font supports "Á"
 
 p1 <-
   p1 + theme(
@@ -122,7 +123,7 @@ p1 <-
     legend.text = element_text(size = 16)
   ) # Increase legend text
 
-Filename <-  glue(i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
 ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
 
 

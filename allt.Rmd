@@ -1,0 +1,120 @@
+---
+title: "hvalfj"
+author: "Valtýr"
+date: "2024-03-19"
+output: html_document
+---
+
+```{r pakkar, message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, out.width = "100%")
+
+Rpakkar <- c("tidyverse", "ggplot2", "dplyr", "hrbrthemes",  "RColorBrewer")
+load_packages <- function(package_vector) {
+  for (package in package_vector) {
+    library(package, character.only = TRUE)
+  }
+}
+load_packages(Rpakkar)
+
+```
+
+```{r innlestur, message=FALSE, warning=FALSE, include=FALSE}
+KM <- read.csv("gogn/coverkm.csv", check.names = F)
+KM <-  KM[, -c(7:9)]
+data <- read.csv("gogn/hreinsad.csv", check.names = F) 
+
+```
+
+
+```{r gagnamix, message=FALSE, warning=FALSE}
+ 
+# sameina gögn og filtera type fyrir mosa og blað- og runnf og taka út bera klöpp sem tegund
+ joined_data <- data %>%
+   left_join(KM, by = c("Reitur", "Type", "species")) %>%
+   select(species, Type, Reitur, km, everything()) %>%
+   filter(Type %in% c("Mosar", "Blað- og runnfléttur"), !species %in% "Ber klöpp")
+ 
+ # Breyta í long format og velja ár. Taka út NA í Value/þekju
+ jd_long <- joined_data %>%
+   pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Value", names_prefix = "") %>%
+   mutate(Year = as.numeric(Year)) %>%
+   filter(Year %in% c(2020, 2023) & !is.na(Value)) 
+
+ # Gera almennileg punktaheiti
+ jd_long <- jd_long %>%
+   mutate(PointType = case_when(
+     Fluor == 1 ~ "Innan þynningarsvæðis flúors",
+     Brennisteinn == 1 & Fluor == 0 ~ "Innan þynningarsvæðis brennisteins",
+     TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"
+   )) 
+ 
+ # Skrifa þetta út fyrir þá sem nota ekki R
+ #write.csv(jd_long,"Thynningarsvaedi.csv", row.names = F, na = "", fileEncoding = "latin1") 
+```
+
+```{r BladOgRunn, message=FALSE, warning=FALSE}
+
+ 
+ # Reikna þekjubreytingar fyrir hvern reit á hverju ári og taka saman type
+ jd_summary <- jd_long |> 
+   filter(Type == "Blað- og runnfléttur") |> 
+   group_by(km, Stadur, Reitur, PointType, Year) %>%
+   summarise(Coverage = sum(Value, na.rm = TRUE), .groups = 'drop') %>%
+   pivot_wider(names_from = Year, values_from = Coverage, names_prefix = "M") %>%
+   mutate(CoverageChange = M2023 - M2020)
+ 
+ # Sætir litir
+ colors_dark2 <- brewer.pal(3, "Dark2")
+ 
+  ggplot(jd_summary, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point(size = 3) +
+   geom_smooth(data = filter(jd_summary, PointType == "Utan þynningarsvæðis iðnaðarsvæðisins"), 
+               method = "lm", se = TRUE, aes(group = 1, color = "Utan þynningarsvæðis iðnaðarsvæðisins")) +
+   scale_shape_manual(values = c(17, 15, 1)) +
+   scale_color_manual(values = colors_dark2) +
+   theme_minimal() +
+   theme(panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) +
+   labs(title = "Blað- og runnfléttur",
+        x = "Fjarlægð frá Grundartanga (km)",
+        y = "Þekjubreyting 2020-2023 (prósentustig)",
+        shape = "Reitir", 
+        color = "Reitir") +
+   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))),
+          shape = guide_legend(override.aes = list(color = colors_dark2)))
+```
+
+```{r Mosar, message=FALSE, warning=FALSE}
+
+ # Reikna þekjubreytingar fyrir hvern reit á hverju ári og taka saman type
+ jd_summary <- jd_long |> 
+   filter(Type == "Mosar") |> 
+   group_by(km, Stadur, Reitur, PointType, Year) %>%
+   summarise(Coverage = sum(Value, na.rm = TRUE), .groups = 'drop') %>%
+   pivot_wider(names_from = Year, values_from = Coverage, names_prefix = "M") %>%
+   mutate(CoverageChange = M2023 - M2020)
+ 
+ # Sætir litir
+ colors_dark2 <- brewer.pal(3, "Dark2")
+ 
+  ggplot(jd_summary, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point(size = 3) +
+   geom_smooth(data = filter(jd_summary, PointType == "Utan þynningarsvæðis iðnaðarsvæðisins"), 
+               method = "lm", se = TRUE, aes(group = 1, color = "Utan þynningarsvæðis iðnaðarsvæðisins")) +
+   scale_shape_manual(values = c(17, 15, 1)) +
+   scale_color_manual(values = colors_dark2) +
+   theme_minimal() +
+   theme(panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) +
+   labs(title = "Mosar",
+        x = "Fjarlægð frá Grundartanga (km)",
+        y = "Þekjubreyting 2020-2023 (prósentustig)",
+        shape = "Reitir", 
+        color = "Reitir") +
+   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))),
+          shape = guide_legend(override.aes = list(color = colors_dark2)))
+```
+
+
+
+
+
+

@@ -38,14 +38,14 @@ species_counts <- jd_long_Engin_NA %>%
   select(Type, Year, Mean, SE)
 
 # Meðalþekja reita eftir Type
-df <- jd_long_Engin_NA |> 
+df <- jd_long |> 
   group_by(Type,Year,Reitur) %>% 
   summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
   group_by(Type,Year) %>% 
   summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop')
 
 # heildarþekja (öll Type) allra reita innan ára
-df_summary <- jd_long_Engin_NA |> 
+df_summary <- jd_long |> 
   group_by(Year,Reitur) %>% 
   summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
   group_by(Year) %>% 
@@ -67,11 +67,11 @@ p1 <-
     size = .6,
     position = position_dodge(width = 0.75)
   ) +
-  geom_errorbar(
-    aes(ymin = Mean - SE, ymax = Mean + SE),
-    width = .2,
-    position = position_dodge(width = 0.75)
-  ) +
+  # geom_errorbar(
+  #   aes(ymin = Mean - SE, ymax = Mean + SE),
+  #   width = .2,
+  #   position = position_dodge(width = 0.75)
+  # ) +
   scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
   scale_y_continuous(
     labels = label_dollar(prefix = "", suffix = " \n%"),

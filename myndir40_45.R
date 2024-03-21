@@ -1,0 +1,191 @@
+colors_dark2 <- brewer.pal(8, "Accent")
+########
+#mynd 40
+########
+
+
+mynd <- read.table("mynd40.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8") %>% 
+  pivot_longer(cols = c("hraunbreyskja","snepaskóf" ), names_to = "Gerd", values_to = "Heild" ) |> 
+  mutate(Gerd = case_when(
+    Gerd == "snepaskóf"~"Snepaskóf",
+    Gerd == "hraunbreyskja"~"Hraunbreyskja"
+  ))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+mynd$Gerd <- factor(mynd$Gerd, levels = c("Snepaskóf","Hraunbreyskja"))
+
+
+p1 <- ggplot(mynd, aes(x = Gerd, y = Heild*0.001, fill = Stadir)) +
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".")) +
+  labs(title = "",  y = "µg S/g þurrefnis", x = "") +
+  theme_minimal()+
+  ggtitle("Brennisteinn")+
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd40",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+
+########
+#mynd 41
+########
+
+mynd <- read.table("mynd41.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8") %>% 
+  pivot_longer(cols = c("snepaskóf","hraunbreyskja"), names_to = "Gerd", values_to = "Heild" ) |> 
+  mutate(Gerd = case_when(
+    Gerd == "snepaskóf"~"Snepaskóf",
+    Gerd == "hraunbreyskja"~"Hraunbreyskja"
+  ))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+mynd$Gerd <- factor(mynd$Gerd, levels = c("Snepaskóf","Hraunbreyskja"))
+
+
+p1 <- ggplot(mynd, aes(x = Gerd, y = Heild, fill = Stadir)) +
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "µg F/g þurrefnis", x = "") +
+  theme_minimal()+
+  ggtitle("Flúor")+
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd41",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+
+########
+#mynd 42
+########
+mynd <- read.table("mynd42.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8", check.names = F) %>% 
+  pivot_longer(cols = starts_with("19") | starts_with("20"), 
+               names_to = "Year", 
+               values_to = "Value", 
+               names_prefix = "") %>%
+  mutate(Year = as.numeric(Year))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+
+p1 <- ggplot(mynd, aes(fill = factor(Year), y = Value*0.001, x = Stadir)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "µg S/g þurrefnis", x = "") +
+  ggtitle("Snepaskóf")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd42",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+
+
+########
+#mynd 43
+########
+mynd <- read.table("mynd43.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8", check.names = F) %>% 
+  pivot_longer(cols = starts_with("19") | starts_with("20"), 
+               names_to = "Year", 
+               values_to = "Value", 
+               names_prefix = "") %>%
+  mutate(Year = as.numeric(Year))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+
+p1 <- ggplot(mynd, aes(fill = factor(Year), y = Value*0.001, x = Stadir)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "µg S/g þurrefnis", x = "") +
+  ggtitle("Hraunbreyskja")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd43",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+
+########
+#mynd 44
+########
+mynd <- read.table("mynd44.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8", check.names = F) %>% 
+  pivot_longer(cols = starts_with("19") | starts_with("20"), 
+               names_to = "Year", 
+               values_to = "Value", 
+               names_prefix = "") %>%
+  mutate(Year = as.numeric(Year))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+
+p1 <- ggplot(mynd, aes(fill = factor(Year), y = Value, x = Stadir)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "µg F/g þurrefnis", x = "") +
+  ggtitle("Snepaskóf")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd44",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+
+
+########
+#mynd 45
+########
+mynd <- read.table("mynd45.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8", check.names = F) %>% 
+  pivot_longer(cols = starts_with("19") | starts_with("20"), 
+               names_to = "Year", 
+               values_to = "Value", 
+               names_prefix = "") %>%
+  mutate(Year = as.numeric(Year))
+colnames(mynd)[1] <- "Stadir"
+mynd$Stadir <- factor(mynd$Stadir, levels = c("Stekkjarás","Akrafjall","Miðfellsmúli","ofan við Gröf", "viðmiðun"))
+
+p1 <- ggplot(mynd, aes(fill = factor(Year), y = Value, x = Stadir)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "µg F/g þurrefnis", x = "") +
+  ggtitle("Hraunbreiskja")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+Filename <-  glue("./myndir/efnagreiningar/","mynd45",".png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")

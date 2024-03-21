@@ -1,512 +1,512 @@
-0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L,
-1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L,
-1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L,
-0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 0L,
-1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-0L, 1L, 0L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L), dim = c(76L,
-9L, 1L), dimnames = list(Reitur = c("R1", "R10", "R11", "R12",
-"R13", "R14", "R15", "R16", "R17", "R18", "R19", "R2", "R20",
-"R21", "R22", "R23", "R24", "R25", "R26", "R27", "R28", "R29",
-"R3", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37",
-"R38", "R39", "R4", "R40", "R41", "R42", "R43", "R44", "R45",
-"R46", "R47", "R48", "R49", "R5", "R50", "R51", "R52", "R53",
-"R54", "R55", "R56", "R57", "R58", "R59", "R6", "R60", "R61",
-"R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69", "R70",
-"R71", "R72", "R73", "R74", "R75", "R76", "R77", "R8", "R9"),
-Year = c("1976", "1997", "1999", "2006", "2011", "2014",
-"2017", "2020", "2023"), class = "matrix")
-structure(c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L,
-1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L,
-1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L,
-0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 0L,
-1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-0L, 1L, 0L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L), dim = c(76L,
-9L, 1L), dimnames = list(Reitur = c("R1", "R10", "R11", "R12",
-"R13", "R14", "R15", "R16", "R17", "R18", "R19", "R2", "R20",
-"R21", "R22", "R23", "R24", "R25", "R26", "R27", "R28", "R29",
-"R3", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37",
-"R38", "R39", "R4", "R40", "R41", "R42", "R43", "R44", "R45",
-"R46", "R47", "R48", "R49", "R5", "R50", "R51", "R52", "R53",
-"R54", "R55", "R56", "R57", "R58", "R59", "R6", "R60", "R61",
-"R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69", "R70",
-"R71", "R72", "R73", "R74", "R75", "R76", "R77", "R8", "R9"),
-Year = c("1976", "1997", "1999", "2006", "2011", "2014",
-"2017", "2020", "2023")), class = "table")
-structure(c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L,
-1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L,
-1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L,
-1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L,
-0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 0L,
-1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L,
-0L, 1L, 0L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L,
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L), dim = c(76L,
-9L, 1L), dimnames = list(Reitur = c("R1", "R10", "R11", "R12",
-"R13", "R14", "R15", "R16", "R17", "R18", "R19", "R2", "R20",
-"R21", "R22", "R23", "R24", "R25", "R26", "R27", "R28", "R29",
-"R3", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37",
-"R38", "R39", "R4", "R40", "R41", "R42", "R43", "R44", "R45",
-"R46", "R47", "R48", "R49", "R5", "R50", "R51", "R52", "R53",
-"R54", "R55", "R56", "R57", "R58", "R59", "R6", "R60", "R61",
-"R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69", "R70",
-"R71", "R72", "R73", "R74", "R75", "R76", "R77", "R8", "R9"),
-Year = c("1976", "1997", "1999", "2006", "2011", "2014",
-"2017", "2020", "2023")), class = "matrix")
-rass <- read.table(text = readClipboard(), header = TRUE, check.names = FALSE)
-if (!requireNamespace("clipr", quietly = TRUE)) install.packages("clipr")
-rass <- read.table(text = clipr::read_clip(), header = TRUE, check.names = FALSE)
-rass <- read.table(text = readClipboard(), header = TRUE, check.names = FALSE)
-str(table(results)
+stat = "identity",
+color = "black",
+size = .6,
+position = position_dodge(width = 0.75)
+) +
+# geom_errorbar(
+#   aes(ymin = Mean - SE, ymax = Mean + SE),
+#   width = .2,
+#   position = position_dodge(width = 0.75)
+# ) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(
+labels = label_dollar(prefix = "", suffix = " \n%"),
+# Example secondary axis (e.g., double the Mean for illustration)
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+) +
+labs(title = "",
+y = "Meðalþekja", x = "") +
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
 )
-as.data.frame.matrix(results)
-str(as.data.frame.matrix(results))
-data_frame <- as.data.frame.matrix(results[, , 1])
-data_frame
-str(data_frame)
-result
-results
-data_frame <- data.frame(
-Reitur = unlist(results$Reitur),
-Year = unlist(results$Year)
+) +
+theme_minimal() +
+theme(legend.title = element_blank(),
+plot.background = element_rect(fill = "white", color = NA)) +
+# annotate(
+#   "text",
+#   x = 2,
+#   y = Inf,
+#   label = "   Álfholt",
+#   hjust = 1,
+#   vjust = 1,
+#   size = 8,
+#   angle = 0
+# )
+ggtitle("            \n      Álfholt")
+p1 <-
+p1 + theme(
+axis.title = element_text(size = 16),
+# Increase axis titles
+axis.text = element_text(size = 16),
+# Increase axis text
+legend.text = element_text(size = 16),
+plot.title = element_text(size = 20)
+) # Increase legend text
+Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+}
+for (i in unique(joined_data$Stadur)[1]) {
+filtered_data <- joined_data %>%
+filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
+select(where(~ !all(is.na(.))))
+# Dynamically identify year columns that exist after filtering
+year_columns <- c('1976', '1997','1999', '2006', '2011', '2014', '2017', '2020', '2023')
+existing_year_columns <- year_columns[year_columns %in% colnames(filtered_data)]
+# Pivot longer only with existing year columns
+jd_long <- filtered_data %>%
+pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
+jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+# Fjöldi tegunda í reit á ári
+species_counts <- jd_long_Engin_NA %>%
+group_by(Reitur, Year) %>%
+summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
+# Meðalfjöldi tegunda í reit á ári
+group_by(Year) %>%
+summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+mutate(Type = "Tegundafjöldi")|>
+select(Type, Year, Mean, SE)
+# Meðalþekja reita eftir Type
+df <- jd_long |>
+group_by(Type,Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+group_by(Type,Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+# heildarþekja (öll Type) allra reita innan ára
+df_summary <- jd_long |>
+group_by(Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+group_by(Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
+mutate(Type = "Heildarþekja") |>
+select(Type, Year, Mean, SE)
+df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+# Ensure Type is ordered as desired
+df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+# Plot
+p1 <-
+ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+geom_bar(
+stat = "identity",
+color = "black",
+size = .6,
+position = position_dodge(width = 0.75)
+) +
+# geom_errorbar(
+#   aes(ymin = Mean - SE, ymax = Mean + SE),
+#   width = .2,
+#   position = position_dodge(width = 0.75)
+# ) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(
+labels = label_dollar(prefix = "", suffix = " \n%"),
+# Example secondary axis (e.g., double the Mean for illustration)
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+) +
+labs(title = "",
+y = "Meðalþekja", x = "") +
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
 )
-data_frame
-table(data_frame )
-KM <- read.csv("gogn/coverkm.csv", check.names = F)
-KM <-  KM[, -c(7:9)]
-data <- read.csv("gogn/hreinsad.csv", check.names = F)
+) +
+theme_minimal() +
+theme(legend.title = element_blank(),
+plot.background = element_rect(fill = "white", color = NA)) +
+# annotate(
+#   "text",
+#   x = 2,
+#   y = Inf,
+#   label = "   Álfholt",
+#   hjust = 1,
+#   vjust = 1,
+#   size = 8,
+#   angle = 0
+# )
+ggtitle(i)
+p1 <-
+p1 + theme(
+axis.title = element_text(size = 16),
+# Increase axis titles
+axis.text = element_text(size = 16),
+# Increase axis text
+legend.text = element_text(size = 16),
+plot.title = element_text(size = 20)
+) # Increase legend text
+Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+}
+Filename
+ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year), fill = "white") +
+geom_bar(stat = "identity", color = "black", linewidth = .6, position = position_dodge(width = 0.75)) +
+#geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE), width = .2, position = position_dodge(width = 0.75)) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
+# Example secondary axis (e.g., double the Mean for illustration)
+sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
+labs(title = "",
+y = "Meðalþekja", x = "") +
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
+))+
+theme_minimal()+
+theme(legend.title = element_blank(), plot.background = element_rect(fill = "white", color = NA)) +
+annotate("text", x = 3, y = Inf, label = "Allir reitir utan \n15 nýrra frá 2014", hjust = 1, vjust = 1, size = 8, angle = 0)+
+theme(axis.title = element_text(size = 16), # Increase axis titles
+axis.text = element_text(size = 16), # Increase axis text
+legend.text = element_text(size = 16),
+plot.title = element_text(size = 20)) # Increase legend text
+# Load required libraries
+library(tidyverse)  # For data manipulation and visualization
+library(glue)       # For string interpolation
+library(scales)     # For scaling functions, if needed
+# Define color palette
+colors_dark2 <- brewer.pal(8, "Accent")
+# Define color palette 2
+colors <- brewer.pal(9, "Set1")
+# Load and preprocess data
+# Adjust file paths as necessary
+KM <- read.csv("gogn/coverkm.csv", check.names = FALSE)
+KM <- KM[, -c(7:9)]  # Assuming columns 7 to 9 are removed in all analyses
+data <- read.csv("gogn/hreinsad.csv", check.names = FALSE)
+joined_data <- data |>
+left_join(KM, by = c("Reitur", "Type", "species")) |>
+select(species, Type, Reitur, km, everything()) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+filter(!species %in% "Ber klöpp")
+for (i in unique(joined_data$Stadur)[1]) {
+filtered_data <- joined_data  |>
+filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) |>
+select(where(~ !all(is.na(.))))
+# Pivot longer only with existing year columns
+jd_long <- filtered_data |>
+pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage")
+jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+# Fjöldi tegunda í reit á ári
+species_counts <- jd_long_Engin_NA |>
+group_by(Reitur, Year) |>
+summarise(SpeciesCount = n_distinct(species), .groups = 'drop') |>
+# Meðalfjöldi tegunda í reit á ári
+group_by(Year) |>
+summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+mutate(Type = "Tegundafjöldi")|>
+select(Type, Year, Mean, SE)
+# Meðalþekja reita eftir Type
+df <- jd_long |>
+group_by(Type,Year,Reitur) |>
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+group_by(Type,Year) |>
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm=TRUE), .groups = 'drop')
+# heildarþekja (öll Type) allra reita innan ára
+df_summary <- jd_long |>
+group_by(Year,Reitur) |>
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') |>
+group_by(Year) |>
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') |>
+mutate(Type = "Heildarþekja") |>
+select(Type, Year, Mean, SE)
+df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
+# Ensure Type is ordered as desired
+df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
+# Plot
+p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+# geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE),width = .2,position = position_dodge(width = 0.75)) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
+# Example secondary axis (e.g., double the Mean for illustration)
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")) +
+labs(title = "", y = "Meðalþekja", x = "") +
+scale_x_discrete("",labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
+)) +
+theme_minimal() +
+theme(legend.title = element_blank(),
+plot.background = element_rect(fill = "white", color = NA)) +
+# annotate("text", x = 2,y = Inf,label = "   Álfholt",hjust = 1,vjust = 1,size = 8, angle = 0)
+ggtitle(i)+
+theme(axis.title = element_text(size = 16),
+axis.text = element_text(size = 16),
+legend.text = element_text(size = 16),
+plot.title = element_text(size = 20))
+Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+}
+Filename
 joined_data <- data %>%
 left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`.
 select(species, Type, Reitur, km, everything()) |>
-select(-c(`1999`,`1976`,)) |>
-filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69",
-"R70", "R71", "R72", "R73", "R74", "R75", "R76", "R77")) |>
+select(-c(`1999`)) |>
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
 #mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
-filter(!species %in% "Ber klöpp" &
-!Type %in% c("Grænþörungar", "Cyanobacteria"))
-# Dynamically identify year columns that exist after filtering
-year_columns <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023')
-existing_year_columns <- year_columns[year_columns %in% colnames(joined_data)]
-# Pivot longer only with existing year columns
-jd_long <- joined_data %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-# Assuming jd_long is what you intended to use instead of jd_long_Engin_NA
-jd_long_Engin_NA <- jd_long#[!is.na(jd_long$Coverage),]
+filter(!species %in% "Ber klöpp")
+jd_long <- joined_data |>
+filter(Fluor == 1 &
+!Type %in% c("Grænþörungar", "Cyanobacteria")) |>
+pivot_longer(
+cols = c(`2020`, `2023`, `1976`, `1997`, `2006`, `2011`, `2014`, `2017`),
+names_to = "Year",
+values_to = "Coverage"
+)
+jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
 # Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
-if ("package:plyr" %in% search()) {
-# Detach 'plyr' if it is loaded
-detach("package:plyr", unload = TRUE, character.only = TRUE)
-}
-species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
+# Fjöldi tegunda í reit á ári
+species_counts <- jd_long_Engin_NA %>%
 group_by(Reitur, Year) %>%
-summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
+summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
 # Meðalfjöldi tegunda í reit á ári
-mean_species_per_year <- species_counts %>%
 group_by(Year) %>%
-summarise(Mean = mean(SpeciesCount)) |>
-mutate(Type = "Tegundafjöldi")
-#ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-library(plyr)
-df <- jd_long_Engin_NA |>
-ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |>
-ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)))
-#Leggja saman heildarþekju allra reita innan ára
-df_summary <- df |>
-ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE))
-sums_row <- df_summary %>%
+summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+mutate(Type = "Tegundafjöldi")|>
+select(Type, Year, Mean, SE)
+# Meðalþekja reita eftir Type
+df <- jd_long |>
+group_by(Type,Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+group_by(Type,Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop')
+# heildarþekja (öll Type) allra reita innan ára
+df_summary <- jd_long |>
+group_by(Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+group_by(Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
 mutate(Type = "Heildarþekja") |>
-select(Type, Year, Mean)
-combined_df <- bind_rows(sums_row, mean_species_per_year)
-df_with_heildarþekja <- bind_rows(df, combined_df)
-library(scales)
+select(Type, Year, Mean, SE)
+df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
 # Ensure Type is ordered as desired
 df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
 # Plot
-ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
+p1 <-
+ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+geom_bar(
+stat = "identity",
+color = "black",
+size = .6,
+position = position_dodge(width = 0.75)
+) +
+geom_errorbar(
+aes(ymin = Mean - SE, ymax = Mean + SE),
+width = .2,
+position = position_dodge(width = 0.75)
+) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(
+labels = label_dollar(prefix = "", suffix = " \n%"),
 # Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+) +
 labs(title = "",
 y = "Meðalþekja", x = "") +
-theme_minimal()+
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
+)
+) +
+theme_minimal() +
 theme(legend.title = element_blank(),
 plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-joined_data
-#KM <- read.csv("gogn/coverkm.csv", check.names = F)
-#KM <-  KM[, -c(7:9)]
-data <- read.csv("gogn/hreinsad.csv", check.names = F)
-joined_data <- data %>%
-#left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`.
-select(species, Type, Reitur, km, everything()) |>
-select(-c(`1999`,`1976`,)) |>
-filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69",
-"R70", "R71", "R72", "R73", "R74", "R75", "R76", "R77")) |>
-#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
-filter(!species %in% "Ber klöpp" &
-!Type %in% c("Grænþörungar", "Cyanobacteria"))
-joined_data <- data %>%
-#left_join(KM, by = c("Reitur", "Type", "species")) %>% # Ef þessi villa kemur upp þá Error in `left_join()`:  ! Join columns must be present in data.✖ Problem with `Type`, `species`, `2020`, and `2023`.
-select(species, Type, Reitur, everything()) |>
-select(-c(`1999`,`1976`,)) |>
-filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62", "R63", "R64", "R65", "R66", "R67", "R68", "R69",
-"R70", "R71", "R72", "R73", "R74", "R75", "R76", "R77")) |>
-#mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |>
-filter(!species %in% "Ber klöpp" &
-!Type %in% c("Grænþörungar", "Cyanobacteria"))
-year_columns <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023')
-existing_year_columns <- year_columns[year_columns %in% colnames(joined_data)]
-existing_year_columns
-joined_data
-sapply(joined_data, function(x) sum(is.na(x)))
-rowsum(joined_data[,4:10])
-rowSums(joined_data[,4:10])
-table(rowSums(joined_data[,4:10]))
-apply(joined_data[,4:10], 1, function(x) !any(is.na(x)))
-table(apply(joined_data[,4:10], 1, function(x) !any(is.na(x))))
-# Pivot longer only with existing year columns
-rass <- joined_data[apply(joined_data[,4:10], 1, function(x) !any(is.na(x)))]
-# Pivot longer only with existing year columns
-rass <- joined_data[apply(joined_data[,4:10], 1, function(x) !any(is.na(x))),]
-jd_long <- rass %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-# Assuming jd_long is what you intended to use instead of jd_long_Engin_NA
-jd_long_Engin_NA <- jd_long#[!is.na(jd_long$Coverage),]
+annotate("text", x = 2, y = Inf, label = "Þynningarsvæði F", hjust = 1, vjust = 1, size = 8, angle = 0)
+p1 <-
+p1 + theme(
+axis.title = element_text(size = 16),
+# Increase axis titles
+axis.text = element_text(size = 16),
+# Increase axis text
+legend.text = element_text(size = 16)
+) # Increase legend text
+Filename <-  glue("ÞynningarsvæðiF","-","{paste(unique(jd_long_Engin_NA$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+# Plot
+p1 <-
+ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+geom_bar(
+stat = "identity",
+color = "black",
+size = .6,
+position = position_dodge(width = 0.75)
+) +
+# geom_errorbar(
+#   aes(ymin = Mean - SE, ymax = Mean + SE),
+#   width = .2,
+#   position = position_dodge(width = 0.75)
+# ) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(
+labels = label_dollar(prefix = "", suffix = " \n%"),
+# Example secondary axis (e.g., double the Mean for illustration)
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+) +
+labs(title = "",
+y = "Meðalþekja", x = "") +
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
+)
+) +
+theme_minimal() +
+theme(legend.title = element_blank(),
+plot.background = element_rect(fill = "white", color = NA)) +
+annotate("text", x = 2, y = Inf, label = "Þynningarsvæði F", hjust = 1, vjust = 1, size = 8, angle = 0)
+p1 <-
+p1 + theme(
+axis.title = element_text(size = 16),
+# Increase axis titles
+axis.text = element_text(size = 16),
+# Increase axis text
+legend.text = element_text(size = 16)
+) # Increase legend text
+Filename <-  glue("ÞynningarsvæðiF","-","{paste(unique(jd_long_Engin_NA$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+jd_long <- joined_data |>
+filter(Brennisteinn == 1 &
+!Type %in% c("Grænþörungar", "Cyanobacteria")) |>
+pivot_longer(
+cols = c(`2020`, `2023`, `1976`, `1997`, `2006`, `2011`, `2014`, `2017`),
+names_to = "Year",
+values_to = "Coverage"
+)
+jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
 # Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
-if ("package:plyr" %in% search()) {
-# Detach 'plyr' if it is loaded
-detach("package:plyr", unload = TRUE, character.only = TRUE)
-}
-species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
+# Fjöldi tegunda í reit á ári
+species_counts <- jd_long_Engin_NA %>%
 group_by(Reitur, Year) %>%
-summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
+summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
 # Meðalfjöldi tegunda í reit á ári
-mean_species_per_year <- species_counts %>%
 group_by(Year) %>%
-summarise(Mean = mean(SpeciesCount)) |>
-mutate(Type = "Tegundafjöldi")
-#ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-library(plyr)
-df <- jd_long_Engin_NA |>
-ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |>
-ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)))
-#Leggja saman heildarþekju allra reita innan ára
-df_summary <- df |>
-ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE))
-sums_row <- df_summary %>%
+summarise(Mean = mean(SpeciesCount), SE = sd(SpeciesCount)) |>
+mutate(Type = "Tegundafjöldi")|>
+select(Type, Year, Mean, SE)
+# Meðalþekja reita eftir Type
+df <- jd_long |>
+group_by(Type,Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+group_by(Type,Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop')
+# heildarþekja (öll Type) allra reita innan ára
+df_summary <- jd_long |>
+group_by(Year,Reitur) %>%
+summarise( Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop') %>%
+group_by(Year) %>%
+summarise(Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)), .groups = 'drop') %>%
 mutate(Type = "Heildarþekja") |>
-select(Type, Year, Mean)
-combined_df <- bind_rows(sums_row, mean_species_per_year)
-df_with_heildarþekja <- bind_rows(df, combined_df)
-library(scales)
+select(Type, Year, Mean, SE)
+df_with_heildarþekja <- bind_rows(df, df_summary, species_counts)
 # Ensure Type is ordered as desired
 df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
 # Plot
-ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
+p1 <-
+ggplot(df_with_heildarþekja, aes(x = Type, y = Mean, fill = Year)) +
+geom_bar(
+stat = "identity",
+color = "black",
+size = .6,
+position = position_dodge(width = 0.75)
+) +
+# geom_errorbar(
+#   aes(ymin = Mean - SE, ymax = Mean + SE),
+#   width = .2,
+#   position = position_dodge(width = 0.75)
+# ) +
+scale_fill_manual(values = colors_dark2) +  # Use the Dark2 palette
+scale_y_continuous(
+labels = label_dollar(prefix = "", suffix = " \n%"),
 # Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
+sec.axis = sec_axis( ~ . , name = "Meðaltegundafjöldi")
+) +
 labs(title = "",
 y = "Meðalþekja", x = "") +
-theme_minimal()+
+scale_x_discrete(
+"",
+labels = c(
+"Mosar" = "Mosar",
+"Blað- og runnfléttur" = "Blað- og\nrunnfléttur",
+"Hrúðurfléttur" = "Hrúðurfléttur",
+"Heildarþekja" = "Heildarþekja",
+"Tegundafjöldi" = "Tegundafjöldi"
+)
+) +
+theme_minimal() +
 theme(legend.title = element_blank(),
 plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-# Pivot longer only with existing year columns
-rass <- joined_data[!apply(joined_data[,4:10], 1, function(x) !any(is.na(x))),]
-jd_long <- rass %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-# Assuming jd_long is what you intended to use instead of jd_long_Engin_NA
-jd_long_Engin_NA <- jd_long#[!is.na(jd_long$Coverage),]
-# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
-if ("package:plyr" %in% search()) {
-# Detach 'plyr' if it is loaded
-detach("package:plyr", unload = TRUE, character.only = TRUE)
-}
-species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
-group_by(Reitur, Year) %>%
-summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
-# Meðalfjöldi tegunda í reit á ári
-mean_species_per_year <- species_counts %>%
-group_by(Year) %>%
-summarise(Mean = mean(SpeciesCount)) |>
-mutate(Type = "Tegundafjöldi")
-#ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-library(plyr)
-df <- jd_long_Engin_NA |>
-ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |>
-ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)))
-#Leggja saman heildarþekju allra reita innan ára
-df_summary <- df |>
-ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE))
-sums_row <- df_summary %>%
-mutate(Type = "Heildarþekja") |>
-select(Type, Year, Mean)
-combined_df <- bind_rows(sums_row, mean_species_per_year)
-df_with_heildarþekja <- bind_rows(df, combined_df)
-library(scales)
-# Ensure Type is ordered as desired
-df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
-# Plot
-ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0)
-joined_data[10,]
-rass <- joined_data[!which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0)]
-existing_year_columns
-jd_long <- rass %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-rass <- joined_data[!which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0),]
-jd_long <- rass %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-# Assuming jd_long is what you intended to use instead of jd_long_Engin_NA
-jd_long_Engin_NA <- jd_long#[!is.na(jd_long$Coverage),]
-# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
-if ("package:plyr" %in% search()) {
-# Detach 'plyr' if it is loaded
-detach("package:plyr", unload = TRUE, character.only = TRUE)
-}
-species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
-group_by(Reitur, Year) %>%
-summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
-# Meðalfjöldi tegunda í reit á ári
-mean_species_per_year <- species_counts %>%
-group_by(Year) %>%
-summarise(Mean = mean(SpeciesCount)) |>
-mutate(Type = "Tegundafjöldi")
-#ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-library(plyr)
-df <- jd_long_Engin_NA |>
-ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |>
-ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)))
-#Leggja saman heildarþekju allra reita innan ára
-df_summary <- df |>
-ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE))
-sums_row <- df_summary %>%
-mutate(Type = "Heildarþekja") |>
-select(Type, Year, Mean)
-combined_df <- bind_rows(sums_row, mean_species_per_year)
-df_with_heildarþekja <- bind_rows(df, combined_df)
-library(scales)
-# Ensure Type is ordered as desired
-df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
-# Plot
-ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-rass
-joined_data[!which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0),]
-rass <- joined_data[which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0),]
-rass
-!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0)
-which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0)
-rass <- which(rowSums(!is.na(joined_data[,4:10][, sapply(joined_data[,4:10], is.numeric)])) == 0)
-rass
-jd_long <- joined_data[!rass] %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-jd_long <- joined_data[!rass,] %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-joined_data[!rass,]
-rownames(joined_data)
-rownames(joined_data)
-joined_data[rownames(joined_data)!=rass,]
-ress <- joined_data[rownames(joined_data)!=rass,]
-jd_long <- ress %>%
-pivot_longer(cols = existing_year_columns, names_to = "Year", values_to = "Coverage")
-# Assuming jd_long is what you intended to use instead of jd_long_Engin_NA
-jd_long_Engin_NA <- jd_long#[!is.na(jd_long$Coverage),]
-# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
-if ("package:plyr" %in% search()) {
-# Detach 'plyr' if it is loaded
-detach("package:plyr", unload = TRUE, character.only = TRUE)
-}
-species_counts <- jd_long_Engin_NA[!is.na(jd_long$Coverage),] %>%
-group_by(Reitur, Year) %>%
-summarise(SpeciesCount = n_distinct(species), .groups = 'drop')
-# Meðalfjöldi tegunda í reit á ári
-mean_species_per_year <- species_counts %>%
-group_by(Year) %>%
-summarise(Mean = mean(SpeciesCount)) |>
-mutate(Type = "Tegundafjöldi")
-#ddply(jd_long_Engin_NA,.(Year, species), summarise, Fjoldi = length(species))
-library(plyr)
-df <- jd_long_Engin_NA |>
-ddply(.(Type,Year,Reitur), summarize,  Summa = sum(Coverage, na.rm = TRUE)) |>
-ddply(.(Type,Year),summarize,Mean=mean(Summa, na.rm=TRUE),SE = sd(Summa, na.rm = TRUE) / sqrt(length(Summa)))
-#Leggja saman heildarþekju allra reita innan ára
-df_summary <- df |>
-ddply(.(Year),summarize,Mean=sum(Mean, na.rm=TRUE))
-sums_row <- df_summary %>%
-mutate(Type = "Heildarþekja") |>
-select(Type, Year, Mean)
-combined_df <- bind_rows(sums_row, mean_species_per_year)
-df_with_heildarþekja <- bind_rows(df, combined_df)
-library(scales)
-# Ensure Type is ordered as desired
-df_with_heildarþekja$Type <- factor(df_with_heildarþekja$Type, levels = c("Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"))
-# Plot
-ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-# Plot
-p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-# Plot
-p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 3, y = Inf, label = "Allir reitir utan 15 nýrra frá 2014", hjust = 1, vjust = 1, size = 5, angle = 0)
-ggsave(filename = "mynd4.png", plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
-# Plot
-p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean), fill = "white") +
-geom_bar(aes(fill = Year), stat = "identity", color="black", linewidth =.6, position="dodge") +
-scale_fill_brewer(palette = "Set1") +
-scale_y_continuous(labels = label_dollar(prefix = "", suffix = " \n%"),
-# Example secondary axis (e.g., double the Mean for illustration)
-sec.axis = sec_axis(~ . , name = "Meðaltegundafjöldi")) +
-labs(title = "",
-y = "Meðalþekja", x = "") +
-theme_minimal()+
-theme(legend.title = element_blank(),
-plot.background = element_rect(fill = "white", color = NA)) +
-annotate("text", x = 2, y = Inf, label = "Allir reitir", hjust = 1, vjust = 1, size = 5, angle = 0)
-p1 <- p1 + theme(axis.title = element_text(size = 20), # Increase axis titles
-axis.text = element_text(size = 16), # Increase axis text
-legend.title = element_text(size = 18), # Increase legend title
-legend.text = element_text(size = 16)) # Increase legend text
-p1
-ggsave(filename = "mynd3.png", plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
-ggsave(filename = "myndrass.png", plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
-df_with_heildarþekja
+annotate("text", x = 2, y = Inf, label = "Þynningarsvæði S", hjust = 1, vjust = 1, size = 8, angle = 0)
+p1 <-
+p1 + theme(
+axis.title = element_text(size = 16),
+# Increase axis titles
+axis.text = element_text(size = 16),
+# Increase axis text
+legend.text = element_text(size = 16)
+) # Increase legend text
+Filename <-  glue("ÞynningarsvæðiS","-","{paste(unique(jd_long_Engin_NA$Reitur), collapse='_')}.png")
+ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+hist(joined_data$species)
+hist(table(joined_data))
+joined_data |> pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage") |> group_by(species) |> summarise(Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop')
+rass <- joined_data |> pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage") |> group_by(species) |> summarise(Summa = sum(Coverage, na.rm = TRUE), .groups = 'drop')
+install.packages('DT')
+DT::datatable(rass)
+rass <- joined_data |> pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage") |> group_by(species) |> summarise(Summa = sum(Coverage, na.rm = TRUE),Meðaltal = mean(Coverage, na.rm = TRUE), .groups = 'drop')
+DT::datatable(rass)
+rass <- joined_data |> pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage") |> group_by(species, Type, Year) |> summarise(Summa = sum(Coverage, na.rm = TRUE),Meðaltal = mean(Coverage, na.rm = TRUE), .groups = 'drop')
+str(rass)
+DT::datatable(rass)
+rass <- joined_data |> pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Coverage") |> group_by(species, Type, Year) |> summarise(Summa = sum(Coverage, na.rm = TRUE),Meðaltal = mean(Coverage, na.rm = TRUE), .groups = 'drop') |> filter(!species %in% "Óaðgreindar tegundir")
+DT::datatable(rass)
+savehistory(file = "my_history.Rhistory")
+?savehistory
+savehistory("~/my_history.Rhistory")
+savehistory("~/my_history.Rhistory")
+plot_data <- data %>%
+mutate(CoverageChange = (`2023` - `2020`)/`2020`) %>%
+left_join(KM, by = c("Reitur", "Type", "species")) %>%
+select(species, Type, Stadur, Reitur, km, Fluor, Brennisteinn, everything()) %>%
+filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62") &
+!is.na(CoverageChange) &
+Type %in% "Blað- og runnfléttur") %>%
+mutate(PointType = case_when(
+Fluor == 1 ~ "Fluor",
+Brennisteinn == 1 & Fluor == 0 ~ "Brennisteinn",
+TRUE ~ "Other"
+)) %>%
+select(-c(`1976`, `1997`, `2006`, `2011`, `1999`,`2014`, `2017`))
+p202Og2023
+jd_wide_filtered
+dput(jd_wide_filtered)
+jd_wide_filtered
+jd_fyrir_plot
+jd_filtered
+dput(p202Og2023)

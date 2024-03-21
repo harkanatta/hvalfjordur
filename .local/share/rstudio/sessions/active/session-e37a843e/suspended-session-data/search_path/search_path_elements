@@ -1,5 +1,5 @@
 .GlobalEnv
-package:plyr
+package:glue
 package:scales
 package:RColorBrewer
 package:readxl
@@ -13,6 +13,13 @@ package:tibble
 package:ggplot2
 package:tidyverse
 org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
 tools:rstudio
 package:stats
 package:graphics
@@ -21,4 +28,5 @@ package:utils
 package:datasets
 package:methods
 Autoloads
+org:r-lib
 package:base

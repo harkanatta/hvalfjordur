@@ -605,3 +605,218 @@ p1 <- ggplot(df_with_heildarþekja, aes(x = Type, y = Mean)) +
  
  
  
+ 
+ 
+ 
+
+ 
+  jd_filtered <- jd_long %>%
+filter(identifier %in% include$identifier) |>
+filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+filter(!species %in% "Ber klöpp") |>
+filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2017', '1999')) |>
+mutate(PointType = case_when(
+!is.na(Fluor) ~ "Fluor",
+!is.na(Brennisteinn) ~ "Brennisteinn",
+TRUE ~ "Other")) |>
+group_by(Reitur) %>%
+filter(all(c(2023, 2020) %in% unique(Year))) %>%
+ungroup()
+jd_wide_filtered <- jd_filtered %>%
+pivot_wider(names_from = Year, values_from = Value)
+jd_fyrir_plot <-jd_wide_filtered |>
+group_by(km,Stadur,Reitur,PointType) |>
+summarise(M23=sum(`2023`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M23-M20, .groups = 'drop') |>
+mutate(PointType = case_when(
+PointType=="Fluor" ~ "Innan þynningarsvæðis flúors",
+PointType=="Brennisteinn" ~ "Innan þynningarsvæðis brennisteins",
+TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"))
+ jd_filtered <- jd_long %>%
+   filter(identifier %in% include$identifier) |>
+   filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+   filter(!species %in% "Ber klöpp") |>
+   filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2017', '1999')) |>
+   mutate(PointType = case_when(
+     !is.na(Fluor) ~ "Fluor",
+     !is.na(Brennisteinn) ~ "Brennisteinn",
+     TRUE ~ "Other")) |>
+   group_by(Reitur) %>%
+   filter(all(c(2023, 2020) %in% unique(Year))) %>%
+   ungroup()
+ jd_wide_filtered <- jd_filtered %>%
+   pivot_wider(names_from = Year, values_from = Value)
+ jd_fyrir_plot <-jd_wide_filtered |>
+   group_by(km,Stadur,Reitur,PointType) |>
+   summarise(M23=sum(`2023`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M23-M20, .groups = 'drop') |>
+   mutate(PointType = case_when(
+     PointType=="Fluor" ~ "Innan þynningarsvæðis flúors",
+     PointType=="Brennisteinn" ~ "Innan þynningarsvæðis brennisteins",
+     TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"))
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ joined_data <- data %>%
+   left_join(KM, by = c("Reitur", "Type", "species"))  %>% # Getur komið upp villa, stroka þá út  , "Type", "species"
+   select(species, Type, Reitur, km, everything())
+ 
+ # Define year columns to check
+ year_cols <- c('1976', '1997', '2006', '2011', '2014', '2017', '2020', '2023', '1999')
+ # Create a function to check for rows without numerical values for each year within each Reitur
+
+  check_numerical_values <- function(data, year_cols) {
+   results <- data %>%
+     select(Reitur, all_of(year_cols)) %>%
+     pivot_longer(cols = -Reitur, names_to = "Year", values_to = "Value") %>%
+     group_by(Reitur, Year) %>%
+     summarize(HasValue = any(!is.na(Value) & Value > 0), .groups = 'drop') %>%
+     filter(!HasValue)
+   return(results)
+ }
+ 
+  jd <- joined_data
+ # Apply the function to the jd dataframe
+ results <- check_numerical_values(jd, year_cols)
+ # Print results
+ print(results)
+ results_df <-as.data.frame(table(results))[,c(1,2,4)]
+ colnames(results_df) <-  c("Reitur","Year","Exclude")
+ rass <- results_df[order(results_df$Reitur) & results_df$Exclude==0,]
+ include <- rass[,1:2]
+ include$identifier <- paste(include$Reitur, include$Year, sep = "_")
+ 
+ jd_long <- jd %>%
+   pivot_longer(cols = starts_with("19") | starts_with("20"),
+                names_to = "Year",
+                values_to = "Value",
+                names_prefix = "") %>%
+   mutate(Year = as.numeric(Year))
+ jd_long$identifier <- paste(jd_long$Reitur, jd_long$Year, sep = "_")
+ 
+ jd_filtered <- jd_long %>%
+   filter(identifier %in% include$identifier) |>
+   filter(Type %in% "Blað- og runnfléttur") |> # setja filter fyrir myndir hér
+   filter(!species %in% "Ber klöpp") |>
+   filter(!Year %in% c( '1976', '1997', '2006', '2011', '2014', '2017', '1999')) |>
+   mutate(PointType = case_when(
+     Fluor == 1 ~ "Fluor",
+     Brennisteinn == 1 & Fluor == 0 ~ "Brennisteinn",
+     TRUE ~ "Other")) |>
+   group_by(Reitur) %>%
+   filter(all(c(2023, 2020) %in% unique(Year))) %>%
+   ungroup()
+ 
+ jd_wide_filtered <- jd_filtered %>%
+   pivot_wider(names_from = Year, values_from = Value)
+ jd_fyrir_plot <-jd_wide_filtered |>
+   group_by(km,Stadur,Reitur,PointType) |>
+   summarise(M23=sum(`2023`, na.rm = T),M20=sum(`2020`, na.rm = T ),CoverageChange=M23-M20, .groups = 'drop') |>
+   mutate(PointType = case_when(
+     PointType=="Fluor" ~ "Innan þynningarsvæðis flúors",
+     PointType=="Brennisteinn" ~ "Innan þynningarsvæðis brennisteins",
+     TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"))
+ # Define colors from Dark2 palette
+ library(RColorBrewer)
+ colors_dark2 <- brewer.pal(3, "Dark2")
+ # Adjust your ggplot code
+
+ 
+ ggplot(jd_fyrir_plot, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point(size = 3) + # Increase point size
+   geom_smooth(data = subset(jd_fyrir_plot, PointType == "Utan þynningarsvæðis iðnaðarsvæðisins"), method = "lm", se = TRUE, aes(group = 1, color = "Utan þynningarsvæðis iðnaðarsvæðisins")) +
+   scale_shape_manual(values = c("Innan þynningarsvæðis flúors" = 17, "Innan þynningarsvæðis brennisteins" = 15, "Utan þynningarsvæðis iðnaðarsvæðisins" = 1)) +
+   scale_color_manual(values = c("Innan þynningarsvæðis flúors" = colors_dark2[1], "Innan þynningarsvæðis brennisteins" = colors_dark2[2], "Utan þynningarsvæðis iðnaðarsvæðisins" = colors_dark2[3])) +
+   theme_minimal() +
+   theme(panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) + # Add frame around the plot area
+   labs(title = "Blað- og runnfléttur",
+        x = "Fjarlægð frá Grundartanga (km)",
+        y = "Þekjubreyting 2020-2023 (prósentustig)",
+        shape = "Reitir", # Change legend title for shapes
+        color = "Reitir") + # Change legend title for colors
+   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))), # Ensure legend matches plot symbols
+          shape = guide_legend(override.aes = list(color = colors_dark2))) # Match colors in legend
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ library(dplyr)
+ library(tidyr)
+ library(ggplot2)
+ library(RColorBrewer)
+ 
+ # Join datasets and immediately filter out unnecessary rows and columns
+ joined_data <- data %>%
+   left_join(KM, by = c("Reitur", "Type", "species")) %>%
+   select(species, Type, Reitur, km, everything()) %>%
+   filter(Type == "Blað- og runnfléttur", !species %in% "Ber klöpp")
+ 
+ # Convert to long format and filter based on years directly
+ jd_long <- joined_data %>%
+   pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Value", names_prefix = "") %>%
+   mutate(Year = as.numeric(Year)) %>%
+   filter(Year %in% c(2020, 2023) & !is.na(Value)) # Focusing on years directly relevant to the plot |> 
+
+ 
+ # Assign PointType with a single mutate call
+ jd_long <- jd_long %>%
+   mutate(PointType = case_when(
+     Fluor == 1 ~ "Innan þynningarsvæðis flúors",
+     Brennisteinn == 1 & Fluor == 0 ~ "Innan þynningarsvæðis brennisteins",
+     TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"
+   ))
+ 
+ # Calculate Coverage Change for each Reitur and Year directly
+ jd_summary <- jd_long %>%
+   group_by(km, Stadur, Reitur, PointType, Year) %>%
+   summarise(Coverage = sum(Value, na.rm = TRUE), .groups = 'drop') %>%
+   pivot_wider(names_from = Year, values_from = Coverage, names_prefix = "M") %>%
+   mutate(CoverageChange = M2023 - M2020)
+ 
+ # Define colors from Dark2 palette
+ colors_dark2 <- brewer.pal(3, "Dark2")
+ 
+ # Plotting
+ ggplot(jd_summary, aes(x = km, y = CoverageChange, color = PointType, shape = PointType)) +
+   geom_point(size = 3) +
+   geom_smooth(data = filter(jd_summary, PointType == "Utan þynningarsvæðis iðnaðarsvæðisins"), 
+               method = "lm", se = TRUE, aes(group = 1, color = "Utan þynningarsvæðis iðnaðarsvæðisins")) +
+   scale_shape_manual(values = c(17, 15, 1)) +
+   scale_color_manual(values = colors_dark2) +
+   theme_minimal() +
+   theme(panel.border = element_rect(colour = "black", fill=NA, linewidth=1)) +
+   labs(title = "Blað- og runnfléttur",
+        x = "Fjarlægð frá Grundartanga (km)",
+        y = "Þekjubreyting 2020-2023 (prósentustig)",
+        shape = "Reitir", 
+        color = "Reitir") +
+   guides(color = guide_legend(override.aes = list(shape = c(17,15,1))),
+          shape = guide_legend(override.aes = list(color = colors_dark2)))
+ 
+ # Note: Adjust shape and color scales as necessary to match your specific plot needs.
+ 

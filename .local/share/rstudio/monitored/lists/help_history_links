@@ -4,4 +4,7 @@ help/library/tidyr/html/pivot_wider.html,R: Pivot data from long to wide
 help/library/ggplot2/html/scale_manual.html,R: Create your own discrete scale
 help/library/ggplot2/html/scale_discrete.html,R: Position scales for discrete data
 help/library/dplyr/html/rename.html,R: Rename columns
+help/library/ggplot2/html/annotate.html,R: Create an annotation layer
 help/library/RColorBrewer/html/ColorBrewer.html,R: ColorBrewer palettes
+help/library/ggplot2/html/labs.html,"R: Modify axis, legend, and plot labels"
+help/library/utils/html/savehistory.html,R: Load or Save or Display the Commands History

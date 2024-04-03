@@ -20,6 +20,12 @@ org:r-lib
 org:r-lib
 org:r-lib
 org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
+org:r-lib
 tools:rstudio
 package:stats
 package:graphics

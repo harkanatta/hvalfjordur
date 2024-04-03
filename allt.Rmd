@@ -8,7 +8,7 @@ output: html_document
 ```{r pakkar, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, out.width = "100%")
 
-Rpakkar <- c("tidyverse", "ggplot2", "dplyr", "hrbrthemes",  "RColorBrewer")
+Rpakkar <- c("tidyverse", "ggplot2", "hrbrthemes",  "RColorBrewer")
 load_packages <- function(package_vector) {
   for (package in package_vector) {
     library(package, character.only = TRUE)
@@ -20,7 +20,11 @@ load_packages(Rpakkar)
 
 ```{r innlestur, message=FALSE, warning=FALSE, include=FALSE}
 KM <- read.csv("gogn/coverkm.csv", check.names = F)
-KM <-  KM[, -c(7:9)]
+KM <-  KM[, -c(7:9)]|> 
+    select(-c(species,Type)) |> 
+    group_by(km, Stadur, Reitur, Fluor,Brennisteinn) %>%
+    distinct() %>%
+    ungroup()
 data <- read.csv("gogn/hreinsad.csv", check.names = F) 
 
 ```
@@ -30,9 +34,12 @@ data <- read.csv("gogn/hreinsad.csv", check.names = F)
  
 # sameina gögn og filtera type fyrir mosa og blað- og runnf og taka út bera klöpp sem tegund
  joined_data <- data %>%
-   left_join(KM, by = c("Reitur", "Type", "species")) %>%
+   left_join(KM, by = c("Reitur")) %>%
    select(species, Type, Reitur, km, everything()) %>%
-   filter(Type %in% c("Mosar", "Blað- og runnfléttur"), !species %in% "Ber klöpp")
+   mutate(species = tolower(species)) |> 
+   filter(!species %in% "ber klöpp" & !species %in% "dauður mosi") |> 
+   filter(!Type %in% c("Grænþörungar", "Cyanobacteria")) |> 
+   filter(!is.na(Stadur))
  
  # Breyta í long format og velja ár. Taka út NA í Value/þekju
  jd_long <- joined_data %>%
@@ -53,7 +60,11 @@ data <- read.csv("gogn/hreinsad.csv", check.names = F)
 ```
 
 ```{r BladOgRunn, message=FALSE, warning=FALSE}
-
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+if ("package:plyr" %in% search()) {
+  # Detach 'plyr' if it is loaded
+  detach("package:plyr", unload = TRUE, character.only = TRUE)
+}
  
  # Reikna þekjubreytingar fyrir hvern reit á hverju ári og taka saman type
  jd_summary <- jd_long |> 
@@ -114,7 +125,144 @@ data <- read.csv("gogn/hreinsad.csv", check.names = F)
 ```
 
 
+```{r stoplaritin}
+joined_data <- data %>%
+  left_join(KM, by = c("Reitur", "Type", "species")) %>% 
+  select(species, Type, Reitur, km, everything()) |>
+  select(-c(`1999`)) |> 
+  filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |>
+  filter(!species %in% "Ber klöpp") 
 
 
 
+
+```
+
+
+```{r klettastry, message=FALSE, warning=FALSE}
+
+joined_data <- data %>%
+  left_join(KM, by = c("Reitur", "Type", "species")) %>% 
+  select(species, Type, Reitur, km, everything()) |>
+  select(-c(`1997`)) |> 
+  filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54",
+                        "R55", "R57", "R58", "R59", "R61", "R62") &
+          species %in% "Ramalina subfarinacea" )|> 
+pivot_longer(cols = starts_with("19") | starts_with("20"), 
+             names_to = "Year", 
+             values_to = "Value", 
+             names_prefix = "")
+
+
+p1 <- ggplot(joined_data, aes(fill = factor(Year), y = Value, x = Reitur)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".",suffix = " \n%")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "Þekja", x = "") +
+  ggtitle("Klettastrý")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+p1
+#ath í R_2023, reit 33 er ártalið 1997 með 1% klettastrý. Er það talan fyrir árið 1999 í mynd 37 í skýrslunni?
+# Filename <-  glue("./myndir/","mynd37",".png")
+# ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+
+```
+
+```{r snepaskofInnan, message=FALSE, warning=FALSE}
+joined_data <- data %>%
+  left_join(KM, by = c("Reitur", "Type", "species")) %>% 
+  select(species, Type, Reitur, km, everything()) |>
+  #select(-c(`1999`)) |> 
+  filter(Reitur %in% c("R11", "R33", "R34", "R56", "R60") &
+           species %in% "Parmelia saxatilis" ) |> 
+  pivot_longer(cols = starts_with("19") | starts_with("20"), 
+               names_to = "Year", 
+               values_to = "Value", 
+               names_prefix = "")
+
+colors_dark2 <- brewer.pal(9, "Set1")
+
+ggplot(joined_data, aes(fill = factor(Year), y = Value, x = Reitur)) + 
+  geom_bar(stat = "identity",color = "black",size = .6,position = position_dodge(width = 0.75)) +
+  scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".",suffix = " \n%")) +
+  labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+  scale_fill_manual(values = colors_dark2) + 
+  labs(title = "",  y = "Þekja", x = "") +
+  ggtitle("Snepaskóf - innan þynningarsvæðis")+
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        plot.background = element_rect(fill = "white", color = NA)) +
+  theme(axis.title = element_text(size = 16), # Increase axis titles
+        axis.text = element_text(size = 16), # Increase axis text
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 18)) # Increase legend text
+
+
+#ath í R_2023, reit 33 er ártalið 1997 með 1% klettastrý. Er það talan fyrir árið 1999 í mynd 37 í skýrslunni?
+# Filename <-  glue("./myndir/","mynd38",".png")
+# ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+```
+
+```{r snepaskofUtan, message=FALSE, warning=FALSE}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+
+# Define constants
+species_filter <- "Parmelia saxatilis"
+reitur_groups <- list(
+    group1 = c("R12", "R13", "R14", "R16", "R21", "R30", "R32", "R37", "R42", "R44", "R45"),
+    group2 = c("R47", "R48", "R49", "R51", "R52", "R64", "R67", "R69", "R70", "R72", "R73")
+)
+colors_dark2 <- c("#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d", "#666666", "#1f78b4") 
+
+
+# Function to prepare dataset
+prepare_data <- function(data, KM, reitur_group) {
+    data %>%
+        left_join(KM, by = c("Reitur", "Type", "species")) %>%
+        select(species, Type, Reitur, km, everything()) %>%
+        filter(species %in% species_filter) %>%
+        pivot_longer(cols = starts_with("19") | starts_with("20"), names_to = "Year", values_to = "Value") %>%
+        filter(Reitur %in% reitur_group)
+}
+
+# Preparing data
+joined_data_group1 <- prepare_data(data, KM, reitur_groups$group1)
+joined_data_group2 <- prepare_data(data, KM, reitur_groups$group2)
+
+# Function to create plot
+create_plot <- function(data) {
+    ggplot(data, aes(fill = factor(Year), y = Value, x = Reitur)) + 
+        geom_bar(stat = "identity", color = "black", size = .6, position = position_dodge(width = 0.75)) +
+        scale_y_continuous(labels = scales::label_number(decimal.mark = ",", big.mark = ".", suffix = " \n%")) +
+        labs(x = "Year", y = "Value", fill = "Location", title = "Value by Year and Location") +
+        scale_fill_manual(values = colors_dark2) + 
+        labs(title = "", y = "Þekja", x = "") +
+        ggtitle("Snepaskóf - utan þynningarsvæðis") +
+        theme_minimal() +
+        theme(legend.title = element_blank(), plot.background = element_rect(fill = "white", color = NA),
+              axis.title = element_text(size = 16), axis.text = element_text(size = 16), legend.text = element_text(size = 16),
+              plot.title = element_text(size = 18), legend.position = "none")
+}
+
+# Creating plots
+p1 <- create_plot(joined_data_group1)
+p2 <- create_plot(joined_data_group2)
+
+# Stacking plots
+stacked_plots <- p1 / p2
+
+# Display the stacked plots
+stacked_plots
+
+```
 

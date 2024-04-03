@@ -820,3 +820,60 @@ TRUE ~ "Utan þynningarsvæðis iðnaðarsvæðisins"))
  
  # Note: Adjust shape and color scales as necessary to match your specific plot needs.
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ library(readxl)
+ library(dplyr)
+ library(writexl)
+ 
+ # Load the dataset
+ data <- read_excel("SortedTables.xlsx")
+ 
+ # Assuming 'Category' is the column with the names like 'Blað- og runnfléttur'
+ # Adjust 'Category' to the actual name of your column
+ 
+ # Desired order
+ new_order <- c("Mosar", "Blað- og runnfléttur", "Hrúðurfléttur", "Heildarþekja", "Tegundafjöldi")
+ 
+ # Identify breaks in the tables if there's a specific pattern that repeats, e.g., a blank row or a specific header/name in the first column
+ # This example assumes there's a unique identifier for the start of each table, adjust accordingly
+ # Here, we pretend '3. mynd - allt' repeats and marks the beginning of each table
+ 
+ table_starts <- which(data$Category == "3. mynd - allt")
+ 
+ # If your data starts directly with data rows and '3. mynd - allt' is a header not included in the data, you might want to adjust the approach to identify table starts
+ 
+ # Placeholder for reordered data
+ reordered_data <- data.frame()
+ 
+ # Loop through each table, reorder, and combine
+ for (i in seq_along(table_starts)) {
+   if (i < length(table_starts)) {
+     table_data <- data[table_starts[i]:table_starts[i+1]-1, ]
+   } else {
+     table_data <- data[table_starts[i]:nrow(data), ]
+   }
+   
+   # Reorder based on new_order array
+   ordered_table <- table_data %>%
+     mutate(order = match(Category, new_order)) %>%
+     arrange(order) %>%
+     select(-order) # remove the temporary 'order' column
+   
+   # Combine
+   reordered_data <- rbind(reordered_data, ordered_table)
+ }
+ 
+ # Write the reordered data to a new Excel file
+ write_xlsx(reordered_data, "reordered_data.xlsx")
+ 
+ 

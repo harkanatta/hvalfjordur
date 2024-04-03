@@ -1,0 +1,56 @@
+1. mynd,,,,,,
+km,Stadur,Reitur,PointType,M2020,M2023,CoverageChange
+1.4,Stekkjarás,R3,Innan þynningarsvæðis flúors,18.1,18.6,0.5
+1.4,Stekkjarás,R33,Innan þynningarsvæðis flúors,68,67,-1
+1.5,Stekkjarás,R34,Innan þynningarsvæðis flúors,25,21.5,-3.5
+1.5,Stekkjarás,R35,Innan þynningarsvæðis flúors,10.6,17.5,6.9
+1.8,Selás,R8,Innan þynningarsvæðis flúors,15.5,12.5,-3
+1.9,Selás,R11,Innan þynningarsvæðis flúors,0.61,2.1,1.49
+2,Bjarnarholt,R12,Utan þynningarsvæðis iðnaðarsvæðisins,7.5,4.5,-3
+2,Bjarnarholt,R13,Utan þynningarsvæðis iðnaðarsvæðisins,0.11,,
+2,Bjarnarholt,R14,Utan þynningarsvæðis iðnaðarsvæðisins,0.5,0.5,0
+2.3,Akrafjall,R56,Innan þynningarsvæðis brennisteins,11,15.1,4.1
+2.4,Akrafjall,R60,Innan þynningarsvæðis brennisteins,10,13,3
+2.7,Langholt,R27,Innan þynningarsvæðis brennisteins,2,1.5,-0.5
+3,Kalmansá,R36,Utan þynningarsvæðis iðnaðarsvæðisins,0.5,0.5,0
+3,Kalmansá,R38,Utan þynningarsvæðis iðnaðarsvæðisins,1,1,0
+3.2,Kalastaðakot,R63,Utan þynningarsvæðis iðnaðarsvæðisins,,6,
+3.2,Kalastaðakot,R64,Utan þynningarsvæðis iðnaðarsvæðisins,10,1,-9
+3.2,Kalastaðakot,R65,Utan þynningarsvæðis iðnaðarsvæðisins,,32,
+3.2,Álfholt,R30,Utan þynningarsvæðis iðnaðarsvæðisins,1.5,2.5,1
+3.2,Álfholt,R31,Utan þynningarsvæðis iðnaðarsvæðisins,2.1,2.5,0.4
+3.9,Ofan Hvalfjarðareyrar,R20,Utan þynningarsvæðis iðnaðarsvæðisins,0.5,0.5,0
+3.9,Ofan Hvalfjarðareyrar,R51,Utan þynningarsvæðis iðnaðarsvæðisins,6.6,,
+3.9,Ofan Hvalfjarðareyrar,R52,Utan þynningarsvæðis iðnaðarsvæðisins,4,11.5,7.5
+4,Ofan við Gröf,R72,Utan þynningarsvæðis iðnaðarsvæðisins,24,16,-8
+4,Ofan við Gröf,R73,Utan þynningarsvæðis iðnaðarsvæðisins,10.5,14.1,3.6
+4,Ofan við Gröf,R74,Utan þynningarsvæðis iðnaðarsvæðisins,14,,
+5,Gimbrapallar,R69,Utan þynningarsvæðis iðnaðarsvæðisins,17,16.6,-0.4
+5,Gimbrapallar,R70,Utan þynningarsvæðis iðnaðarsvæðisins,19,11,-8
+5,Gimbrapallar,R71,Utan þynningarsvæðis iðnaðarsvæðisins,20.61,29,8.39
+5,Miðfellsmúli,R66,Utan þynningarsvæðis iðnaðarsvæðisins,11,23,12
+5,Miðfellsmúli,R67,Utan þynningarsvæðis iðnaðarsvæðisins,23,33.5,10.5
+5,Miðfellsmúli,R68,Utan þynningarsvæðis iðnaðarsvæðisins,15,24,9
+5.7,Beitistaðaholt,R39,Utan þynningarsvæðis iðnaðarsvæðisins,73,75,2
+5.7,Beitistaðaholt,R40,Utan þynningarsvæðis iðnaðarsvæðisins,12,11,-1
+5.7,Beitistaðaholt,R41,Utan þynningarsvæðis iðnaðarsvæðisins,6.6,7,0.4
+6.9,Skvöp,R26,Utan þynningarsvæðis iðnaðarsvæðisins,1,4.1,3.1
+7.4,Neðristallar,R75,Utan þynningarsvæðis iðnaðarsvæðisins,3.01,3.01,0
+7.4,Neðristallar,R76,Utan þynningarsvæðis iðnaðarsvæðisins,6,9,3
+7.4,Neðristallar,R77,Utan þynningarsvæðis iðnaðarsvæðisins,16,14,-2
+8.1,Hvammsnes,R48,Utan þynningarsvæðis iðnaðarsvæðisins,50.5,38,-12.5
+8.1,Hvammsnes,R49,Utan þynningarsvæðis iðnaðarsvæðisins,38.6,43,4.4
+8.1,Hvammsnes,R50,Utan þynningarsvæðis iðnaðarsvæðisins,7,9,2
+8.7,Tíðaskarð,R16,Utan þynningarsvæðis iðnaðarsvæðisins,10.5,10,-0.5
+8.7,Tíðaskarð,R17,Utan þynningarsvæðis iðnaðarsvæðisins,75.5,76,0.5
+8.7,Tíðaskarð,R18,Utan þynningarsvæðis iðnaðarsvæðisins,14.5,15.5,1
+16.1,Hafnarbæli,R42,Utan þynningarsvæðis iðnaðarsvæðisins,66.5,53.2,-13.3
+16.1,Hafnarbæli,R43,Utan þynningarsvæðis iðnaðarsvæðisins,4,4,0
+16.1,Hafnarbæli,R44,Utan þynningarsvæðis iðnaðarsvæðisins,21.1,26,4.9
+17.3,Þyrilsnes,R45,Utan þynningarsvæðis iðnaðarsvæðisins,0.5,1,0.5
+17.3,Þyrilsnes,R46,Utan þynningarsvæðis iðnaðarsvæðisins,17,23,6
+17.3,Þyrilsnes,R47,Utan þynningarsvæðis iðnaðarsvæðisins,20,29,9
+20.9,Hvalfjarðarbotn,R21,Utan þynningarsvæðis iðnaðarsvæðisins,8.1,12.1,4
+20.9,Hvalfjarðarbotn,R23,Utan þynningarsvæðis iðnaðarsvæðisins,13.1,13.6,0.5
+,,R15,Utan þynningarsvæðis iðnaðarsvæðisins,,26,
+,,R57,Utan þynningarsvæðis iðnaðarsvæðisins,,16,

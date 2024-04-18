@@ -1,6 +1,7 @@
 library(tidyverse)
 library(glue)
 library(scales)
+library(RColorBrewer)
 
 colors_dark2 <- brewer.pal(8, "Accent")
 KM <- read.csv("gogn/coverkm.csv", check.names = F)
@@ -13,13 +14,14 @@ joined_data <- data %>%
   #select(-c(`1999`)) |> 
   filter(!Reitur %in% c("R1", "R2", "R4", "R5", "R6", "R9", "R10", "R15", "R28", "R29", "R53", "R54", "R55", "R57", "R58", "R59", "R61", "R62")) |> 
   #mutate(Type = if_else(species == "Ber klöpp", "Ber klöpp", Type)) |> 
-  filter(!species %in% "Ber klöpp") 
+  #filter(!species %in% "Ber klöpp")
+  filter(!species %in% c("Ber klöpp", "Dauður mosi"))  
 
 #########
 ### lúppa fyrir myndir allra staða - stöplarit: "Mosar","Blað- og runnfléttur", "Hrúðurfléttur","Heildarþekja",  "Tegundafjöldi"
 #########
 
-for (i in unique(joined_data$Stadur)[9]) {
+for (i in unique(joined_data$Stadur)[11]) {
   
   filtered_data <- joined_data %>%
     filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) %>%
@@ -36,8 +38,14 @@ for (i in unique(joined_data$Stadur)[9]) {
 jd_long_Engin_NA <- jd_long[!is.na(jd_long$Coverage),]
 
 # Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+# Heildarfjöldi tegunda á ári í hverjum reit. Passa að hafa ekki plyr pakkann í gangi.
+if ("package:plyr" %in% search()) {
+  # Detach 'plyr' if it is loaded
+  detach("package:plyr", unload = TRUE, character.only = TRUE)
+}
 # Fjöldi tegunda í reit á ári
 species_counts <- jd_long_Engin_NA %>%
+  mutate(species = tolower(species)) |> 
   group_by(Reitur, Year) %>% 
   summarise(SpeciesCount = n_distinct(species), .groups = 'drop') %>%
   # Meðalfjöldi tegunda í reit á ári
@@ -106,7 +114,7 @@ p1 <-
     "text",
     x = 2,
     y = Inf,
-    label = "Álfholt",
+    label = i,
     hjust = 1,
     vjust = 1,
     size = 8,
@@ -123,8 +131,8 @@ p1 <-
     legend.text = element_text(size = 16)
   ) # Increase legend text
 
-Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
-ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
+#Filename <-  glue("./myndir/",i,"-","{paste(unique(filtered_data$Reitur), collapse='_')}.png")
+#ggsave(filename = Filename, plot = p1, width = 11.7, height = 8.3, dpi = 300, units = "in")
 
 
 }

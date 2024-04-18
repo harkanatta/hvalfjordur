@@ -17,7 +17,7 @@ joined_data <- data %>%
   filter(!is.na(Stadur))
 
 tabeList <- list()
-for (i in unique(joined_data$Stadur)) {
+for (i in unique(joined_data$Stadur)[11]) {
 
 filtered_data <- joined_data %>%
   filter(Stadur %in% i & !Type %in% c("Grænþörungar", "Cyanobacteria")) |> 
